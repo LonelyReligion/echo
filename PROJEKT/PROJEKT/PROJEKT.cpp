@@ -22,10 +22,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_ LPWSTR    lpCmdLine,
                      _In_ int       nCmdShow)
 {
+
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
-    // TODO: W tym miejscu umieść kod.
+    // TODO: W tym miejscu umieść kod procedur?.
 
     typedef int(_fastcall* MyProc1)(int, int);
     HINSTANCE dllHandle = NULL;
@@ -154,7 +155,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
             // TODO: Tutaj dodaj kod rysujący używający elementu hdc...
-            EndPaint(hWnd, &ps);
+
         }
         break;
     case WM_DESTROY:
