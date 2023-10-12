@@ -48,6 +48,8 @@ namespace CppCLRWinFormsProject {
 	private: System::Windows::Forms::Label^ label5;
 	private: System::Windows::Forms::Button^ start;
 	private: System::Windows::Forms::Label^ status;
+	private: System::Windows::Forms::NumericUpDown^ numericUpDown1;
+	private: System::Windows::Forms::Label^ watki_info;
 
 
 	protected:
@@ -75,7 +77,10 @@ namespace CppCLRWinFormsProject {
 			this->label5 = (gcnew System::Windows::Forms::Label());
 			this->start = (gcnew System::Windows::Forms::Button());
 			this->status = (gcnew System::Windows::Forms::Label());
+			this->numericUpDown1 = (gcnew System::Windows::Forms::NumericUpDown());
+			this->watki_info = (gcnew System::Windows::Forms::Label());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericUpDown1))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// label1
@@ -101,7 +106,7 @@ namespace CppCLRWinFormsProject {
 				static_cast<System::Byte>(238)));
 			this->wybierz_obraz->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(239)), static_cast<System::Int32>(static_cast<System::Byte>(207)),
 				static_cast<System::Int32>(static_cast<System::Byte>(227)));
-			this->wybierz_obraz->Location = System::Drawing::Point(37, 326);
+			this->wybierz_obraz->Location = System::Drawing::Point(37, 382);
 			this->wybierz_obraz->Margin = System::Windows::Forms::Padding(8, 7, 8, 7);
 			this->wybierz_obraz->Name = L"wybierz_obraz";
 			this->wybierz_obraz->Size = System::Drawing::Size(451, 62);
@@ -117,7 +122,7 @@ namespace CppCLRWinFormsProject {
 				static_cast<System::Byte>(238)));
 			this->checkBox1->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(234)), static_cast<System::Int32>(static_cast<System::Byte>(154)),
 				static_cast<System::Int32>(static_cast<System::Byte>(178)));
-			this->checkBox1->Location = System::Drawing::Point(37, 244);
+			this->checkBox1->Location = System::Drawing::Point(37, 214);
 			this->checkBox1->Margin = System::Windows::Forms::Padding(8, 7, 8, 7);
 			this->checkBox1->Name = L"checkBox1";
 			this->checkBox1->Size = System::Drawing::Size(168, 28);
@@ -132,7 +137,7 @@ namespace CppCLRWinFormsProject {
 				static_cast<System::Byte>(238)));
 			this->label2->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(226)), static_cast<System::Int32>(static_cast<System::Byte>(115)),
 				static_cast<System::Int32>(static_cast<System::Byte>(150)));
-			this->label2->Location = System::Drawing::Point(834, 20);
+			this->label2->Location = System::Drawing::Point(837, 20);
 			this->label2->Margin = System::Windows::Forms::Padding(8, 0, 8, 0);
 			this->label2->Name = L"label2";
 			this->label2->Size = System::Drawing::Size(127, 20);
@@ -141,6 +146,7 @@ namespace CppCLRWinFormsProject {
 			// 
 			// pictureBox1
 			// 
+			this->pictureBox1->BackColor = System::Drawing::SystemColors::Info;
 			this->pictureBox1->Location = System::Drawing::Point(531, 58);
 			this->pictureBox1->Margin = System::Windows::Forms::Padding(8, 7, 8, 7);
 			this->pictureBox1->Name = L"pictureBox1";
@@ -170,7 +176,7 @@ namespace CppCLRWinFormsProject {
 				static_cast<System::Byte>(238)));
 			this->label4->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(234)), static_cast<System::Int32>(static_cast<System::Byte>(154)),
 				static_cast<System::Int32>(static_cast<System::Byte>(178)));
-			this->label4->Location = System::Drawing::Point(963, 20);
+			this->label4->Location = System::Drawing::Point(966, 20);
 			this->label4->Name = L"label4";
 			this->label4->Size = System::Drawing::Size(45, 20);
 			this->label4->TabIndex = 7;
@@ -183,7 +189,7 @@ namespace CppCLRWinFormsProject {
 				static_cast<System::Byte>(238)));
 			this->label5->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(226)), static_cast<System::Int32>(static_cast<System::Byte>(115)),
 				static_cast<System::Int32>(static_cast<System::Byte>(150)));
-			this->label5->Location = System::Drawing::Point(33, 566);
+			this->label5->Location = System::Drawing::Point(33, 587);
 			this->label5->Name = L"label5";
 			this->label5->Size = System::Drawing::Size(135, 20);
 			this->label5->TabIndex = 8;
@@ -192,11 +198,11 @@ namespace CppCLRWinFormsProject {
 			// 
 			// start
 			// 
-			this->start->BackColor = System::Drawing::Color::Snow;
-			this->start->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 20));
+			this->start->BackColor = System::Drawing::SystemColors::Info;
+			this->start->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 18));
 			this->start->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(226)), static_cast<System::Int32>(static_cast<System::Byte>(115)),
 				static_cast<System::Int32>(static_cast<System::Byte>(150)));
-			this->start->Location = System::Drawing::Point(37, 444);
+			this->start->Location = System::Drawing::Point(37, 473);
 			this->start->Name = L"start";
 			this->start->Size = System::Drawing::Size(168, 55);
 			this->start->TabIndex = 9;
@@ -211,12 +217,39 @@ namespace CppCLRWinFormsProject {
 			this->status->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12));
 			this->status->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(226)), static_cast<System::Int32>(static_cast<System::Byte>(115)),
 				static_cast<System::Int32>(static_cast<System::Byte>(150)));
-			this->status->Location = System::Drawing::Point(174, 566);
+			this->status->Location = System::Drawing::Point(174, 587);
 			this->status->Name = L"status";
 			this->status->Size = System::Drawing::Size(53, 20);
 			this->status->TabIndex = 10;
 			this->status->Text = L"status";
 			this->status->Click += gcnew System::EventHandler(this, &Form1::status_Click);
+			// 
+			// numericUpDown1
+			// 
+			this->numericUpDown1->BackColor = System::Drawing::SystemColors::Info;
+			this->numericUpDown1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14));
+			this->numericUpDown1->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(234)), static_cast<System::Int32>(static_cast<System::Byte>(154)),
+				static_cast<System::Int32>(static_cast<System::Byte>(178)));
+			this->numericUpDown1->Location = System::Drawing::Point(185, 272);
+			this->numericUpDown1->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 3000, 0, 0, 0 });
+			this->numericUpDown1->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
+			this->numericUpDown1->Name = L"numericUpDown1";
+			this->numericUpDown1->Size = System::Drawing::Size(120, 29);
+			this->numericUpDown1->TabIndex = 11;
+			this->numericUpDown1->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
+			this->numericUpDown1->ValueChanged += gcnew System::EventHandler(this, &Form1::numericUpDown1_ValueChanged);
+			// 
+			// watki_info
+			// 
+			this->watki_info->AutoSize = true;
+			this->watki_info->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14));
+			this->watki_info->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(234)), static_cast<System::Int32>(static_cast<System::Byte>(154)),
+				static_cast<System::Int32>(static_cast<System::Byte>(178)));
+			this->watki_info->Location = System::Drawing::Point(38, 272);
+			this->watki_info->Name = L"watki_info";
+			this->watki_info->Size = System::Drawing::Size(130, 24);
+			this->watki_info->TabIndex = 12;
+			this->watki_info->Text = L"liczba w¹tków:";
 			// 
 			// Form1
 			// 
@@ -224,7 +257,9 @@ namespace CppCLRWinFormsProject {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(239)), static_cast<System::Int32>(static_cast<System::Byte>(207)),
 				static_cast<System::Int32>(static_cast<System::Byte>(227)));
-			this->ClientSize = System::Drawing::Size(1036, 616);
+			this->ClientSize = System::Drawing::Size(1042, 625);
+			this->Controls->Add(this->watki_info);
+			this->Controls->Add(this->numericUpDown1);
 			this->Controls->Add(this->status);
 			this->Controls->Add(this->start);
 			this->Controls->Add(this->label5);
@@ -244,6 +279,7 @@ namespace CppCLRWinFormsProject {
 			this->Text = L"ECHO";
 			this->Load += gcnew System::EventHandler(this, &Form1::Form1_Load);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericUpDown1))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -259,9 +295,9 @@ private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e
 	OpenFileDialog openFileDialog;
 	openFileDialog.InitialDirectory = "c:\\";
 	openFileDialog.Filter = "bitmapa (*.bmp)|*.bmp"; //zmienic 
-	openFileDialog.FilterIndex = 1; //zmienic
+	openFileDialog.FilterIndex = 1; 
 	openFileDialog.RestoreDirectory = true;
-	openFileDialog.ShowDialog(); //sprawdzac czy ock
+	openFileDialog.ShowDialog(); 
 
 	if (openFileDialog.FileName != "") {
 		pictureBox1->Load(openFileDialog.FileName);
@@ -273,6 +309,8 @@ private: System::Void pictureBox1_Click(System::Object^ sender, System::EventArg
 private: System::Void start_Click(System::Object^ sender, System::EventArgs^ e) {
 }
 private: System::Void status_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void numericUpDown1_ValueChanged(System::Object^ sender, System::EventArgs^ e) {
 }
 };
 }
