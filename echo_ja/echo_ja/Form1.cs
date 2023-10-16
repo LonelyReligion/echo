@@ -1,10 +1,22 @@
 namespace echo_ja
 {
-    public partial class Form1 : Form
+    public partial class ECHO : Form
     {
-        public Form1()
+        public ECHO()
         {
             InitializeComponent();
+        }
+
+        private void czas_wykonania_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void wybor_obrazu_Click(object sender, EventArgs e)
+        {
+            if (okno_plikow.ShowDialog() == DialogResult.OK) {
+                ramka.Load(okno_plikow.FileName);
+            };
         }
     }
 }
