@@ -42,6 +42,7 @@
             this.czas_wykonania = new System.Windows.Forms.Label();
             this.instrukcja_cd = new System.Windows.Forms.Label();
             this.okno_plikow = new System.Windows.Forms.OpenFileDialog();
+            this.logging = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ramka)).BeginInit();
             this.SuspendLayout();
@@ -104,6 +105,7 @@
             this.start.TabIndex = 4;
             this.start.Text = "Wykonaj";
             this.start.UseVisualStyleBackColor = false;
+            this.start.Click += new System.EventHandler(this.start_Click);
             // 
             // opis_kontrolki_czas_wykonania
             // 
@@ -156,6 +158,7 @@
             this.ramka.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.ramka.TabIndex = 8;
             this.ramka.TabStop = false;
+            this.ramka.Click += new System.EventHandler(this.ramka_Click);
             // 
             // opis_kontrolki
             // 
@@ -207,12 +210,22 @@
             this.okno_plikow.FileName = "openFileDialog1";
             this.okno_plikow.Filter = "pliki .bmp|*.bmp";
             // 
+            // logging
+            // 
+            this.logging.AutoSize = true;
+            this.logging.Location = new System.Drawing.Point(228, 536);
+            this.logging.Name = "logging";
+            this.logging.Size = new System.Drawing.Size(189, 15);
+            this.logging.TabIndex = 13;
+            this.logging.Text = "łańcuch na potrzeby debugowania";
+            // 
             // ECHO
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(207)))), ((int)(((byte)(227)))));
             this.ClientSize = new System.Drawing.Size(1078, 677);
+            this.Controls.Add(this.logging);
             this.Controls.Add(this.instrukcja_cd);
             this.Controls.Add(this.czas_wykonania);
             this.Controls.Add(this.status);
@@ -251,5 +264,6 @@
         private Label czas_wykonania;
         private Label instrukcja_cd;
         private OpenFileDialog okno_plikow;
+        private Label logging;
     }
 }
