@@ -37,6 +37,7 @@ namespace echo_ja
         {
             IntPtr pDll = LoadLibrary(@"echo_dll_c.dll");
             IntPtr pAddressOfFunctionToCall = GetProcAddress(pDll, "multiplication");
+
             multiplication mul = (multiplication)Marshal.GetDelegateForFunctionPointer(pAddressOfFunctionToCall, typeof(multiplication));
 
             logging.Text = "C: [jesli wyswietlam 32 wynik jest poprawny] " + mul(2, 16).ToString();
