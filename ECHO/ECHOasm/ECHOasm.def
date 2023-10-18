@@ -1,0 +1,2 @@
+LIBRARY ECHOasm
+EXPORTS GenerujEcho
