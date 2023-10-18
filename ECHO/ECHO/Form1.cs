@@ -3,11 +3,17 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.IO.Ports;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 
 namespace ECHO
@@ -26,6 +32,9 @@ namespace ECHO
 
         [DllImport("kernel32.dll")]
         public static extern bool FreeLibrary(IntPtr hModule);
+
+        //obrazek jako tablica bajtowa
+        public byte[] data;
         public Form1()
         {
             InitializeComponent();
@@ -37,42 +46,57 @@ namespace ECHO
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 obraz.Load(openFileDialog1.FileName);
+
+                //wczytywanie obrazka
+                var wczytany = new Bitmap(openFileDialog1.FileName);
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    wczytany.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
+                    data = ms.ToArray();
+                }
+
             }
+            
         }
 
 
         private void start_Click_1(object sender, EventArgs e)
         {
-            string dllChoice;
+            string wybordll;
             if (asmdll.Checked)
             {
-                dllChoice = "ECHOasm.dll";
+                wybordll = "ECHOasm.dll";
             }
             else
             {
-                dllChoice = "ECHOc.dll";
+                wybordll = "ECHOc.dll";
             }
-            var dllHandle = LoadLibrary(dllChoice);
-            if (dllHandle != IntPtr.Zero)
+            var uchwytdll = LoadLibrary(wybordll);
+            if (uchwytdll != IntPtr.Zero)
             {
-                var procAddress = GetProcAddress(dllHandle, "GenerujEcho");
+                var procAddress = GetProcAddress(uchwytdll, "GenerujEcho");
 
                 if (procAddress != IntPtr.Zero)
                 {
-                    GenerujEcho filterImage = (GenerujEcho)Marshal.GetDelegateForFunctionPointer(procAddress, typeof(GenerujEcho));
-                    int result = filterImage(3, 4);
-                    MessageBox.Show($"3 * 4 = {result}");
+                    GenerujEcho gen = (GenerujEcho)Marshal.GetDelegateForFunctionPointer(procAddress, typeof(GenerujEcho));
+                    status.Text = gen(1, 2).ToString();
+
                 }
                 else
                 {
-                    MessageBox.Show("Nie znaleziono funkcji");
+                    status.Text = "Nie znaleziono funkcji";
                 }
-                FreeLibrary(dllHandle);
+                FreeLibrary(uchwytdll);
             }
             else
             {
-                MessageBox.Show("Nie znaleziono biblioteki");
+                status.Text = "Nie znaleziono biblioteki";
             }
+        }
+
+        private void watki_ValueChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -113,9 +113,9 @@
             this.status.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(154)))), ((int)(((byte)(178)))));
             this.status.Location = new System.Drawing.Point(185, 567);
             this.status.Name = "status";
-            this.status.Size = new System.Drawing.Size(57, 24);
+            this.status.Size = new System.Drawing.Size(105, 24);
             this.status.TabIndex = 19;
-            this.status.Text = "status";
+            this.status.Text = "zatrzymane";
             // 
             // tytul
             // 
@@ -196,6 +196,7 @@
             this.watki.Name = "watki";
             this.watki.Size = new System.Drawing.Size(120, 29);
             this.watki.TabIndex = 28;
+            this.watki.ValueChanged += new System.EventHandler(this.watki_ValueChanged);
             // 
             // Form1
             // 
