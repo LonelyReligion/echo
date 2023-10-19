@@ -7,6 +7,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Ports;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -35,8 +36,10 @@ namespace ECHO
         [DllImport("kernel32.dll")]
         public static extern bool FreeLibrary(IntPtr hModule);
 
-        //obrazek jako tablica bajtowa
+        //obrazek jako tablica bajtowa z headerem
         public byte[] data;
+        
+
         public Form1()
         {
             InitializeComponent();
@@ -81,7 +84,6 @@ namespace ECHO
                 if (procAddress != IntPtr.Zero)
                 {
                     GenerujEcho gen = (GenerujEcho)Marshal.GetDelegateForFunctionPointer(procAddress, typeof(GenerujEcho));
-                    //status.Text = gen(1, 2).ToString();
                     string wynik = "";
                     Thread[] zadania = new Thread[Decimal.ToInt32(watki.Value)];
                     for (int i = 0; i < watki.Value; i++) {
