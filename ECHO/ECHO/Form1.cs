@@ -23,6 +23,8 @@ namespace ECHO
     {
         // ZMIENIĆ NA TYPY POBIERANE I ZWRACANE
         delegate int GenerujEcho(int a, int b);
+        private static readonly object klucz = new Object();
+        
 
         [DllImport("kernel32.dll")]
         public static extern IntPtr LoadLibrary(string dllToLoad);
@@ -54,7 +56,7 @@ namespace ECHO
                     wczytany.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
                     data = ms.ToArray();
                 }
-
+                status.Text = data[0].ToString();
             }
             
         }
@@ -79,8 +81,22 @@ namespace ECHO
                 if (procAddress != IntPtr.Zero)
                 {
                     GenerujEcho gen = (GenerujEcho)Marshal.GetDelegateForFunctionPointer(procAddress, typeof(GenerujEcho));
-                    status.Text = gen(1, 2).ToString();
+                    //status.Text = gen(1, 2).ToString();
+                    string wynik = "";
+                    Thread[] zadania = new Thread[Decimal.ToInt32(watki.Value)];
+                    for (int i = 0; i < watki.Value; i++) {
+                        int j = i; //wyscig
+                        Thread tmp = new Thread(() => fcja(j, ref wynik, gen));
+                        zadania[j] = tmp;
+                        tmp.Start();
+                    }
 
+                    for (int i = 1; i < watki.Value; i++)
+                    {
+                        int j = i; //wyscig
+                        zadania[j].Join();
+                    }
+                    status.Text = wynik;
                 }
                 else
                 {
@@ -94,6 +110,12 @@ namespace ECHO
             }
         }
 
+        //ref jest konieczne, aby zmiana była zapisywana na zewnątrz
+        private void fcja(int i, ref string wynik, GenerujEcho gen) {
+            lock (klucz) { //lock zapobiega utracie danych podczas jednoczesnego dostępu do zmiennej wynik
+                wynik += gen(i, 2).ToString(); 
+            };
+        }
         private void watki_ValueChanged(object sender, EventArgs e)
         {
 
