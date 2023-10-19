@@ -37,8 +37,7 @@ namespace ECHO
         public static extern bool FreeLibrary(IntPtr hModule);
 
         //obrazek jako tablica bajtowa z headerem
-        public byte[] data;
-        
+        byte[] wartoscirgb;
 
         public Form1()
         {
@@ -50,18 +49,41 @@ namespace ECHO
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                obraz.Load(openFileDialog1.FileName);
+                obraz.Load(openFileDialog1.FileName);//zostaje
 
                 //wczytywanie obrazka
                 var wczytany = new Bitmap(openFileDialog1.FileName);
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    wczytany.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
-                    data = ms.ToArray();
-                }
-                status.Text = data[0].ToString();
+
+                Rectangle rect = new Rectangle(0, 0, wczytany.Width, wczytany.Height); //(0,0) lokalizacja
+                
+                System.Drawing.Imaging.BitmapData bmpData =
+                    //LockBits Blokuje pamięć systemową Bitmapy.
+                    wczytany.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite,
+                    wczytany.PixelFormat);
+
+                //adres pierwszej linijki
+                IntPtr wskaznik = bmpData.Scan0;
+
+                int bytes = Math.Abs(bmpData.Stride) * wczytany.Height;
+                wartoscirgb = new byte[bytes];
+
+                //Kopiujemy do tablicy
+                System.Runtime.InteropServices.Marshal.Copy(wskaznik, wartoscirgb, 0, bytes);
+                status.Text = wartoscirgb[0].ToString(); //uzywam do sprawdzenia czy pozbylismy sie headera - tak! przy bialej .bmp jest 256
+                  
+                // filtr - nieistotne 
+                for (int i = 2; i < wartoscirgb.Length; i += 3)
+                    wartoscirgb[i] = 255;
+
+                // Kopuje spowrotem
+                System.Runtime.InteropServices.Marshal.Copy(wartoscirgb, 0, wskaznik, bytes);
+
+                // Odblokowuje 
+                wczytany.UnlockBits(bmpData);
+                obraz.Image = wczytany; //tymczasowe
+                
             }
-            
+
         }
 
 
