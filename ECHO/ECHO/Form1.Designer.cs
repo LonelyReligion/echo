@@ -57,18 +57,20 @@
             this.asmdll.AutoSize = true;
             this.asmdll.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.asmdll.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(154)))), ((int)(((byte)(178)))));
-            this.asmdll.Location = new System.Drawing.Point(32, 301);
+            this.asmdll.Location = new System.Drawing.Point(48, 463);
+            this.asmdll.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.asmdll.Name = "asmdll";
-            this.asmdll.Size = new System.Drawing.Size(221, 28);
+            this.asmdll.Size = new System.Drawing.Size(335, 36);
             this.asmdll.TabIndex = 14;
             this.asmdll.Text = "skorzystaj z wersji .asm";
             this.asmdll.UseVisualStyleBackColor = true;
             // 
             // obraz
             // 
-            this.obraz.Location = new System.Drawing.Point(590, 79);
+            this.obraz.Location = new System.Drawing.Point(885, 122);
+            this.obraz.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.obraz.Name = "obraz";
-            this.obraz.Size = new System.Drawing.Size(512, 512);
+            this.obraz.Size = new System.Drawing.Size(768, 788);
             this.obraz.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.obraz.TabIndex = 15;
             this.obraz.TabStop = false;
@@ -78,9 +80,10 @@
             this.opisczaswykonania.AutoSize = true;
             this.opisczaswykonania.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.opisczaswykonania.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(115)))), ((int)(((byte)(150)))));
-            this.opisczaswykonania.Location = new System.Drawing.Point(886, 34);
+            this.opisczaswykonania.Location = new System.Drawing.Point(1329, 52);
+            this.opisczaswykonania.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.opisczaswykonania.Name = "opisczaswykonania";
-            this.opisczaswykonania.Size = new System.Drawing.Size(150, 24);
+            this.opisczaswykonania.Size = new System.Drawing.Size(228, 32);
             this.opisczaswykonania.TabIndex = 16;
             this.opisczaswykonania.Text = "Czas wykonania:";
             // 
@@ -89,9 +92,10 @@
             this.czaswykonania.AutoSize = true;
             this.czaswykonania.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.czaswykonania.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(154)))), ((int)(((byte)(178)))));
-            this.czaswykonania.Location = new System.Drawing.Point(1047, 34);
+            this.czaswykonania.Location = new System.Drawing.Point(1570, 52);
+            this.czaswykonania.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.czaswykonania.Name = "czaswykonania";
-            this.czaswykonania.Size = new System.Drawing.Size(55, 24);
+            this.czaswykonania.Size = new System.Drawing.Size(83, 32);
             this.czaswykonania.TabIndex = 17;
             this.czaswykonania.Text = "00ms";
             // 
@@ -100,9 +104,10 @@
             this.opisstatus.AutoSize = true;
             this.opisstatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.opisstatus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(115)))), ((int)(((byte)(150)))));
-            this.opisstatus.Location = new System.Drawing.Point(20, 567);
+            this.opisstatus.Location = new System.Drawing.Point(30, 872);
+            this.opisstatus.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.opisstatus.Name = "opisstatus";
-            this.opisstatus.Size = new System.Drawing.Size(159, 24);
+            this.opisstatus.Size = new System.Drawing.Size(245, 32);
             this.opisstatus.TabIndex = 18;
             this.opisstatus.Text = "Status wykonania:";
             // 
@@ -111,9 +116,10 @@
             this.status.AutoSize = true;
             this.status.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.status.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(154)))), ((int)(((byte)(178)))));
-            this.status.Location = new System.Drawing.Point(185, 567);
+            this.status.Location = new System.Drawing.Point(278, 872);
+            this.status.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.status.Name = "status";
-            this.status.Size = new System.Drawing.Size(105, 24);
+            this.status.Size = new System.Drawing.Size(160, 32);
             this.status.TabIndex = 19;
             this.status.Text = "zatrzymane";
             // 
@@ -122,9 +128,10 @@
             this.tytul.AutoSize = true;
             this.tytul.Font = new System.Drawing.Font("Microsoft Sans Serif", 68F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.tytul.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(115)))), ((int)(((byte)(150)))));
-            this.tytul.Location = new System.Drawing.Point(16, 79);
+            this.tytul.Location = new System.Drawing.Point(24, 122);
+            this.tytul.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.tytul.Name = "tytul";
-            this.tytul.Size = new System.Drawing.Size(307, 102);
+            this.tytul.Size = new System.Drawing.Size(458, 154);
             this.tytul.TabIndex = 20;
             this.tytul.Text = "ECHO";
             // 
@@ -133,9 +140,10 @@
             this.opis1.AutoSize = true;
             this.opis1.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.opis1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(154)))), ((int)(((byte)(178)))));
-            this.opis1.Location = new System.Drawing.Point(27, 201);
+            this.opis1.Location = new System.Drawing.Point(40, 309);
+            this.opis1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.opis1.Name = "opis1";
-            this.opis1.Size = new System.Drawing.Size(405, 31);
+            this.opis1.Size = new System.Drawing.Size(599, 46);
             this.opis1.TabIndex = 21;
             this.opis1.Text = "Wczytaj obraz w formacie .bmp, ";
             // 
@@ -144,9 +152,10 @@
             this.opis2.AutoSize = true;
             this.opis2.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.opis2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(154)))), ((int)(((byte)(178)))));
-            this.opis2.Location = new System.Drawing.Point(27, 232);
+            this.opis2.Location = new System.Drawing.Point(40, 357);
+            this.opis2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.opis2.Name = "opis2";
-            this.opis2.Size = new System.Drawing.Size(474, 31);
+            this.opis2.Size = new System.Drawing.Size(694, 46);
             this.opis2.TabIndex = 22;
             this.opis2.Text = "na którym chcesz uzyskać efekt echa.";
             // 
@@ -155,9 +164,10 @@
             this.start.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.start.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.start.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(154)))), ((int)(((byte)(178)))));
-            this.start.Location = new System.Drawing.Point(32, 482);
+            this.start.Location = new System.Drawing.Point(48, 742);
+            this.start.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.start.Name = "start";
-            this.start.Size = new System.Drawing.Size(126, 39);
+            this.start.Size = new System.Drawing.Size(189, 60);
             this.start.TabIndex = 25;
             this.start.Text = "Wykonaj";
             this.start.UseVisualStyleBackColor = false;
@@ -168,9 +178,10 @@
             this.wybierz.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(115)))), ((int)(((byte)(150)))));
             this.wybierz.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.wybierz.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(207)))), ((int)(((byte)(227)))));
-            this.wybierz.Location = new System.Drawing.Point(32, 417);
+            this.wybierz.Location = new System.Drawing.Point(48, 642);
+            this.wybierz.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.wybierz.Name = "wybierz";
-            this.wybierz.Size = new System.Drawing.Size(468, 46);
+            this.wybierz.Size = new System.Drawing.Size(702, 71);
             this.wybierz.TabIndex = 26;
             this.wybierz.Text = "Wybierz obraz na dysku";
             this.wybierz.UseVisualStyleBackColor = false;
@@ -181,9 +192,10 @@
             this.opiswatkow.AutoSize = true;
             this.opiswatkow.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.opiswatkow.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(154)))), ((int)(((byte)(178)))));
-            this.opiswatkow.Location = new System.Drawing.Point(28, 349);
+            this.opiswatkow.Location = new System.Drawing.Point(42, 537);
+            this.opiswatkow.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.opiswatkow.Name = "opiswatkow";
-            this.opiswatkow.Size = new System.Drawing.Size(130, 24);
+            this.opiswatkow.Size = new System.Drawing.Size(197, 32);
             this.opiswatkow.TabIndex = 27;
             this.opiswatkow.Text = "liczba wątków:";
             // 
@@ -192,18 +204,34 @@
             this.watki.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.watki.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.watki.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(154)))), ((int)(((byte)(178)))));
-            this.watki.Location = new System.Drawing.Point(175, 347);
+            this.watki.Location = new System.Drawing.Point(262, 534);
+            this.watki.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.watki.Maximum = new decimal(new int[] {
+            64,
+            0,
+            0,
+            0});
+            this.watki.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.watki.Name = "watki";
-            this.watki.Size = new System.Drawing.Size(120, 29);
+            this.watki.Size = new System.Drawing.Size(180, 39);
             this.watki.TabIndex = 28;
+            this.watki.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.watki.ValueChanged += new System.EventHandler(this.watki_ValueChanged);
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(207)))), ((int)(((byte)(227)))));
-            this.ClientSize = new System.Drawing.Size(1132, 632);
+            this.ClientSize = new System.Drawing.Size(1698, 972);
             this.Controls.Add(this.watki);
             this.Controls.Add(this.opiswatkow);
             this.Controls.Add(this.wybierz);
@@ -217,6 +245,7 @@
             this.Controls.Add(this.opisczaswykonania);
             this.Controls.Add(this.obraz);
             this.Controls.Add(this.asmdll);
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "Form1";
             this.Text = "ECHO";
             ((System.ComponentModel.ISupportInitialize)(this.obraz)).EndInit();

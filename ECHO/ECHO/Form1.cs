@@ -25,7 +25,7 @@ namespace ECHO
         // ZMIENIĆ NA TYPY POBIERANE I ZWRACANE
         delegate int GenerujEcho(int a, int b);
         private static readonly object klucz = new Object();
-        
+
 
         [DllImport("kernel32.dll")]
         public static extern IntPtr LoadLibrary(string dllToLoad);
@@ -70,10 +70,13 @@ namespace ECHO
                 //Kopiujemy do tablicy
                 System.Runtime.InteropServices.Marshal.Copy(wskaznik, wartoscirgb, 0, bytes);
                 status.Text = wartoscirgb[0].ToString(); //uzywam do sprawdzenia czy pozbylismy sie headera - tak! przy bialej .bmp jest 256
-                  
+
                 // filtr - nieistotne 
-                for (int i = 2; i < wartoscirgb.Length; i += 3)
-                    wartoscirgb[i] = 255;
+                //bmp rowna kazdy wiersz do liczby bitow podzielnej przez 4
+                int pad = (int)wartoscirgb.Length / wczytany.Height; 
+                for (int j = 0; j < wczytany.Height; j++)
+                    for (int i = 2; i < wczytany.Width * 3; i += 3)
+                        wartoscirgb[i+pad*j] = 255;
 
                 // Kopuje spowrotem
                 System.Runtime.InteropServices.Marshal.Copy(wartoscirgb, 0, wskaznik, bytes);
@@ -105,14 +108,23 @@ namespace ECHO
 
                 if (procAddress != IntPtr.Zero)
                 {
+
                     GenerujEcho gen = (GenerujEcho)Marshal.GetDelegateForFunctionPointer(procAddress, typeof(GenerujEcho));
                     string wynik = "";
+                    
                     Thread[] zadania = new Thread[Decimal.ToInt32(watki.Value)];
-                    for (int i = 0; i < watki.Value; i++) {
-                        int j = i; //wyscig
-                        Thread tmp = new Thread(() => fcja(j, ref wynik, gen));
-                        zadania[j] = tmp;
-                        tmp.Start();
+                    if (watki.Value > 1)//czemu?
+                    {
+                        for (int i = 0; i < watki.Value; i++)
+                        {
+                            int j = i; //wyscig
+                            Thread tmp = new Thread(() => fcja(j, ref wynik, gen));
+                            zadania[j] = tmp;
+                            tmp.Start();
+                        }
+                    }
+                    else {
+                        wynik += gen(1, 2).ToString();
                     }
 
                     for (int i = 1; i < watki.Value; i++)
