@@ -8,6 +8,7 @@ using System.IO;
 using System.IO.Ports;
 using System.Linq;
 using System.Net.Http;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -23,7 +24,7 @@ namespace ECHO
     public partial class Form1 : Form
     {
         // ZMIENIĆ NA TYPY POBIERANE I ZWRACANE
-        delegate int GenerujEcho(byte[] tablica, int dlugosc_tablicy);
+        delegate int GenerujEcho(byte[] tablica, int dlugosc_tablicy, int index);
         private static readonly object klucz = new Object();
 
 
@@ -42,6 +43,9 @@ namespace ECHO
         //adres pierwszej linijki
         IntPtr wskaznik;
         int bytes;
+        Bitmap wczytany;
+        System.Drawing.Imaging.BitmapData bmpData;
+        Rectangle rect;
 
         public Form1()
         {
@@ -55,13 +59,13 @@ namespace ECHO
             {
                 
                 //wczytywanie obrazka
-                var wczytany = new Bitmap(openFileDialog1.FileName);
+                wczytany = new Bitmap(openFileDialog1.FileName);
                 if (wczytany.PixelFormat == PixelFormat.Format24bppRgb)
                 {
                     obraz.Load(openFileDialog1.FileName);//zostaje;
-                    Rectangle rect = new Rectangle(0, 0, wczytany.Width, wczytany.Height); //(0,0) lokalizacja
+                    rect = new Rectangle(0, 0, wczytany.Width, wczytany.Height); //(0,0) lokalizacja
 
-                    System.Drawing.Imaging.BitmapData bmpData =
+                    bmpData =
                         //LockBits Blokuje pamięć systemową Bitmapy.
                         wczytany.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite,
                         wczytany.PixelFormat);
@@ -113,33 +117,37 @@ namespace ECHO
 
                         //movxz - Copies the contents of the source operand (register or memory location) to the destination operand (register) and zero extends the value.
                         //The size of the converted value depends on the operand-size attribute.
-                        gen(przykladowa, przykladowa.Length);
 
-/*                      Thread[] zadania = new Thread[Decimal.ToInt32(watki.Value)];
+                        Thread[] zadania = new Thread[Decimal.ToInt32(watki.Value)];
                         if (watki.Value > 1)//czemu?
                         {
                             for (int i = 0; i < watki.Value; i++)
                             {
                                 int j = i; //wyscig
-                                Thread tmp = new Thread(() => fcja(j, ref wynik, gen));
+                                int index = j * wartoscirgb.Length / Decimal.ToInt32(watki.Value); // wartoscirgb.Length / 2;
+                                Thread tmp = new Thread(() => fcja(wartoscirgb, index, gen));
                                 zadania[j] = tmp;
                                 tmp.Start();
                             }
                         }
                         else
                         {
-                            wynik = gen(1, 2).ToString();
+                            gen(wartoscirgb, wartoscirgb.Length, 0);
                         }
 
                         for (int i = 1; i < watki.Value; i++)
                         {
                             int j = i; //wyscig
                             zadania[j].Join();
-                        }*/
-                        foreach(var elem in przykladowa) {
+                        }
+/*                        foreach(var elem in przykladowa) {
                             wynik += elem.ToString();
                         };
-                        status.Text = wynik;
+                        status.Text = wynik;*/
+                        
+                        System.Runtime.InteropServices.Marshal.Copy(wartoscirgb, 0, wskaznik, bytes);
+                        // Odblokowuje 
+                        obraz.Image = wczytany; //tymczasowe
 
                     }
                     else {
@@ -159,9 +167,15 @@ namespace ECHO
         }
 
         //ref jest konieczne, aby zmiana była zapisywana na zewnątrz
-        private void fcja(int i, ref string wynik, GenerujEcho gen) {
+        private void fcja(byte[] tablica, int index, GenerujEcho gen)
+        {
             lock (klucz) { //lock zapobiega utracie danych podczas jednoczesnego dostępu do zmiennej wynik
-                /*wynik += gen(i, 2).ToString(); */
+                bmpData =
+                //LockBits Blokuje pamięć systemową Bitmapy.
+                wczytany.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite,
+                wczytany.PixelFormat);
+                gen(wartoscirgb, wartoscirgb.Length / Decimal.ToInt32(watki.Value), index);
+                wczytany.UnlockBits(bmpData);
             };
         }
         private void watki_ValueChanged(object sender, EventArgs e)
