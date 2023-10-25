@@ -49,43 +49,37 @@ namespace ECHO
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                obraz.Load(openFileDialog1.FileName);//zostaje
-
+                
                 //wczytywanie obrazka
                 var wczytany = new Bitmap(openFileDialog1.FileName);
+                if (wczytany.PixelFormat == PixelFormat.Format24bppRgb)
+                {
+                    obraz.Load(openFileDialog1.FileName);//zostaje;
+                    Rectangle rect = new Rectangle(0, 0, wczytany.Width, wczytany.Height); //(0,0) lokalizacja
 
-                Rectangle rect = new Rectangle(0, 0, wczytany.Width, wczytany.Height); //(0,0) lokalizacja
-                
-                System.Drawing.Imaging.BitmapData bmpData =
-                    //LockBits Blokuje pamięć systemową Bitmapy.
-                    wczytany.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite,
-                    wczytany.PixelFormat);
+                    System.Drawing.Imaging.BitmapData bmpData =
+                        //LockBits Blokuje pamięć systemową Bitmapy.
+                        wczytany.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite,
+                        wczytany.PixelFormat);
 
-                //adres pierwszej linijki
-                IntPtr wskaznik = bmpData.Scan0;
+                    //adres pierwszej linijki
+                    IntPtr wskaznik = bmpData.Scan0;
 
-                int bytes = Math.Abs(bmpData.Stride) * wczytany.Height;
-                wartoscirgb = new byte[bytes];
+                    int bytes = Math.Abs(bmpData.Stride) * wczytany.Height;
+                    wartoscirgb = new byte[bytes];
 
-                //Kopiujemy do tablicy
-                System.Runtime.InteropServices.Marshal.Copy(wskaznik, wartoscirgb, 0, bytes);
-                status.Text = wartoscirgb[0].ToString(); //uzywam do sprawdzenia czy pozbylismy sie headera - tak! przy bialej .bmp jest 256
+                    //Kopiujemy do tablicy
+                    System.Runtime.InteropServices.Marshal.Copy(wskaznik, wartoscirgb, 0, bytes);
+                    status.Text = wartoscirgb[0].ToString(); //uzywam do sprawdzenia czy pozbylismy sie headera - tak! przy bialej .bmp jest 256
 
-                // filtr - nieistotne 
-                //bmp rowna kazdy wiersz do liczby bitow podzielnej przez 4
-                int pad = (int)wartoscirgb.Length / wczytany.Height; 
-                for (int j = 0; j < wczytany.Height; j++)
-                    for (int i = 2; i < wczytany.Width * 3; i += 3)
-                        wartoscirgb[i+pad*j] = 255;
-
-                // Kopuje spowrotem
-                System.Runtime.InteropServices.Marshal.Copy(wartoscirgb, 0, wskaznik, bytes);
-
-                // Odblokowuje 
-                wczytany.UnlockBits(bmpData);
-                obraz.Image = wczytany; //tymczasowe
-                
-            }
+                    // Odblokowuje 
+                    wczytany.UnlockBits(bmpData);
+                }
+                else
+                {
+                    MessageBox.Show("Wczytaj 24 - bitową bitmapę i spróbuj ponownie.");
+                }
+            } 
 
         }
 
@@ -108,31 +102,37 @@ namespace ECHO
 
                 if (procAddress != IntPtr.Zero)
                 {
-
-                    GenerujEcho gen = (GenerujEcho)Marshal.GetDelegateForFunctionPointer(procAddress, typeof(GenerujEcho));
-                    string wynik = "";
-                    
-                    Thread[] zadania = new Thread[Decimal.ToInt32(watki.Value)];
-                    if (watki.Value > 1)//czemu?
+                    if (wartoscirgb?.Length > 0)
                     {
-                        for (int i = 0; i < watki.Value; i++)
+                        GenerujEcho gen = (GenerujEcho)Marshal.GetDelegateForFunctionPointer(procAddress, typeof(GenerujEcho));
+                        string wynik = "";
+
+                        Thread[] zadania = new Thread[Decimal.ToInt32(watki.Value)];
+                        if (watki.Value > 1)//czemu?
+                        {
+                            for (int i = 0; i < watki.Value; i++)
+                            {
+                                int j = i; //wyscig
+                                Thread tmp = new Thread(() => fcja(j, ref wynik, gen));
+                                zadania[j] = tmp;
+                                tmp.Start();
+                            }
+                        }
+                        else
+                        {
+                            wynik = gen(1, 2).ToString();
+                        }
+
+                        for (int i = 1; i < watki.Value; i++)
                         {
                             int j = i; //wyscig
-                            Thread tmp = new Thread(() => fcja(j, ref wynik, gen));
-                            zadania[j] = tmp;
-                            tmp.Start();
+                            zadania[j].Join();
                         }
+                        status.Text = wynik;
                     }
                     else {
-                        wynik += gen(1, 2).ToString();
+                        MessageBox.Show("Aby skorzystać z tej funkcji musisz wgrać bitmapę.");
                     }
-
-                    for (int i = 1; i < watki.Value; i++)
-                    {
-                        int j = i; //wyscig
-                        zadania[j].Join();
-                    }
-                    status.Text = wynik;
                 }
                 else
                 {
