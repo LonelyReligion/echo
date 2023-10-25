@@ -23,7 +23,7 @@ namespace ECHO
     public partial class Form1 : Form
     {
         // ZMIENIĆ NA TYPY POBIERANE I ZWRACANE
-        delegate int GenerujEcho(int a, int b);
+        delegate int GenerujEcho(byte[] tablica, int dlugosc_tablicy);
         private static readonly object klucz = new Object();
 
 
@@ -38,6 +38,10 @@ namespace ECHO
 
         //obrazek jako tablica bajtowa z headerem
         byte[] wartoscirgb;
+
+        //adres pierwszej linijki
+        IntPtr wskaznik;
+        int bytes;
 
         public Form1()
         {
@@ -63,14 +67,13 @@ namespace ECHO
                         wczytany.PixelFormat);
 
                     //adres pierwszej linijki
-                    IntPtr wskaznik = bmpData.Scan0;
+                    wskaznik = bmpData.Scan0;
 
-                    int bytes = Math.Abs(bmpData.Stride) * wczytany.Height;
+                    bytes = Math.Abs(bmpData.Stride) * wczytany.Height;
                     wartoscirgb = new byte[bytes];
 
                     //Kopiujemy do tablicy
                     System.Runtime.InteropServices.Marshal.Copy(wskaznik, wartoscirgb, 0, bytes);
-                    status.Text = wartoscirgb[0].ToString(); //uzywam do sprawdzenia czy pozbylismy sie headera - tak! przy bialej .bmp jest 256
 
                     // Odblokowuje 
                     wczytany.UnlockBits(bmpData);
@@ -106,8 +109,13 @@ namespace ECHO
                     {
                         GenerujEcho gen = (GenerujEcho)Marshal.GetDelegateForFunctionPointer(procAddress, typeof(GenerujEcho));
                         string wynik = "";
+                        byte[] przykladowa = { 1, 2, 3 };
 
-                        Thread[] zadania = new Thread[Decimal.ToInt32(watki.Value)];
+                        //movxz - Copies the contents of the source operand (register or memory location) to the destination operand (register) and zero extends the value.
+                        //The size of the converted value depends on the operand-size attribute.
+                        gen(przykladowa, przykladowa.Length);
+
+/*                      Thread[] zadania = new Thread[Decimal.ToInt32(watki.Value)];
                         if (watki.Value > 1)//czemu?
                         {
                             for (int i = 0; i < watki.Value; i++)
@@ -127,8 +135,12 @@ namespace ECHO
                         {
                             int j = i; //wyscig
                             zadania[j].Join();
-                        }
+                        }*/
+                        foreach(var elem in przykladowa) {
+                            wynik += elem.ToString();
+                        };
                         status.Text = wynik;
+
                     }
                     else {
                         MessageBox.Show("Aby skorzystać z tej funkcji musisz wgrać bitmapę.");
@@ -149,7 +161,7 @@ namespace ECHO
         //ref jest konieczne, aby zmiana była zapisywana na zewnątrz
         private void fcja(int i, ref string wynik, GenerujEcho gen) {
             lock (klucz) { //lock zapobiega utracie danych podczas jednoczesnego dostępu do zmiennej wynik
-                wynik += gen(i, 2).ToString(); 
+                /*wynik += gen(i, 2).ToString(); */
             };
         }
         private void watki_ValueChanged(object sender, EventArgs e)
