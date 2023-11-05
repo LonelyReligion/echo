@@ -118,28 +118,47 @@ namespace ECHO
                         //movxz - Copies the contents of the source operand (register or memory location) to the destination operand (register) and zero extends the value.
                         //The size of the converted value depends on the operand-size attribute.
 
-                        Thread[] zadania = new Thread[Decimal.ToInt32(watki.Value)];
+                        
                         if (watki.Value > 1)//czemu?
                         {
+                            Func<int, int, IEnumerable<int>> f = (a, b) => Enumerable.Range(0, a / b).Select((n) => a / b + ((a % b) <= n ? 0 : 1));
+
+                            int modulo = wartoscirgb.Length % Decimal.ToInt32(watki.Value);
+                            int iloraz = wartoscirgb.Length / Decimal.ToInt32(watki.Value);
+
+                            int[] poczatki_przedzialow = new int[Decimal.ToInt32(watki.Value)];
+                            int[] dlugosci_przedzialow = new int[Decimal.ToInt32(watki.Value)];
+                            
+                            Thread[] zadania = new Thread[Decimal.ToInt32(watki.Value)];
+
+                            poczatki_przedzialow[0] = 0;
+                            dlugosci_przedzialow[0] = iloraz;
+
+                            for (int i = 1; i < watki.Value; i++) {
+                                poczatki_przedzialow[i] = poczatki_przedzialow[i - 1] + dlugosci_przedzialow[i - 1];
+                                dlugosci_przedzialow[i] = iloraz + (i <= modulo ? 1 : 0);      
+                            }
+
                             for (int i = 0; i < watki.Value; i++)
                             {
                                 int j = i; //wyscig
-                                int index = j * wartoscirgb.Length / Decimal.ToInt32(watki.Value); // wartoscirgb.Length / 2;
-                                Thread tmp = new Thread(() => fcja(wartoscirgb, index, gen));
+                                Thread tmp = new Thread(() => fcja(wartoscirgb, dlugosci_przedzialow[j], poczatki_przedzialow[j], gen));
                                 zadania[j] = tmp;
                                 tmp.Start();
                             }
+
+                            for (int i = 1; i < watki.Value; i++)
+                            {
+                                int j = i; //wyscig
+                                zadania[j].Join();
+                            }
+
                         }
                         else
                         {
                             gen(wartoscirgb, wartoscirgb.Length, 0);
                         }
-
-                        for (int i = 1; i < watki.Value; i++)
-                        {
-                            int j = i; //wyscig
-                            zadania[j].Join();
-                        }
+                        
 /*                        foreach(var elem in przykladowa) {
                             wynik += elem.ToString();
                         };
@@ -147,7 +166,7 @@ namespace ECHO
                         
                         System.Runtime.InteropServices.Marshal.Copy(wartoscirgb, 0, wskaznik, bytes);
                         // Odblokowuje 
-                        obraz.Image = wczytany; //tymczasowe
+                        obraz.Image = wczytany; 
 
                     }
                     else {
@@ -167,14 +186,14 @@ namespace ECHO
         }
 
         //ref jest konieczne, aby zmiana była zapisywana na zewnątrz
-        private void fcja(byte[] tablica, int index, GenerujEcho gen)
+        private void fcja(byte[] tablica, int len, int index, GenerujEcho gen)
         {
             lock (klucz) { //lock zapobiega utracie danych podczas jednoczesnego dostępu do zmiennej wynik
                 bmpData =
                 //LockBits Blokuje pamięć systemową Bitmapy.
                 wczytany.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite,
                 wczytany.PixelFormat);
-                gen(wartoscirgb, wartoscirgb.Length / Decimal.ToInt32(watki.Value), index);
+                gen(wartoscirgb, len, index);
                 wczytany.UnlockBits(bmpData);
             };
         }
