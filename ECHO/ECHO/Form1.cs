@@ -24,7 +24,7 @@ namespace ECHO
     public partial class Form1 : Form
     {
         // ZMIENIĆ NA TYPY POBIERANE I ZWRACANE
-        delegate int GenerujEcho(byte[] tablica, int dlugosc_tablicy, int index);
+        delegate int GenerujEcho(byte[] tablica, int dlugosc_tablicy, int index, int stride, int width, int height);
         private static readonly object klucz = new Object();
 
 
@@ -139,10 +139,17 @@ namespace ECHO
                                 dlugosci_przedzialow[i] = iloraz + (i <= modulo ? 1 : 0);      
                             }
 
+                            
+
                             for (int i = 0; i < watki.Value; i++)
                             {
                                 int j = i; //wyscig
-                                Thread tmp = new Thread(() => fcja(wartoscirgb, dlugosci_przedzialow[j], poczatki_przedzialow[j], gen));
+
+                                int stride = bmpData.Stride;
+                                int width = bmpData.Width;
+                                int height = bmpData.Height;
+
+                                Thread tmp = new Thread(() => fcja(wartoscirgb, dlugosci_przedzialow[j], poczatki_przedzialow[j], gen, stride, width, height));
                                 zadania[j] = tmp;
                                 tmp.Start();
                             }
@@ -156,7 +163,7 @@ namespace ECHO
                         }
                         else
                         {
-                            gen(wartoscirgb, wartoscirgb.Length, 0);
+                            gen(wartoscirgb, wartoscirgb.Length, 0, bmpData.Stride, bmpData.Width, bmpData.Height);
                         }
                         
 /*                        foreach(var elem in przykladowa) {
@@ -186,14 +193,14 @@ namespace ECHO
         }
 
         //ref jest konieczne, aby zmiana była zapisywana na zewnątrz
-        private void fcja(byte[] tablica, int len, int index, GenerujEcho gen)
+        private void fcja(byte[] tablica, int len, int index, GenerujEcho gen, int stride, int width, int height)
         {
             lock (klucz) { //lock zapobiega utracie danych podczas jednoczesnego dostępu do zmiennej wynik
                 bmpData =
                 //LockBits Blokuje pamięć systemową Bitmapy.
                 wczytany.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite,
                 wczytany.PixelFormat);
-                gen(wartoscirgb, len, index);
+                gen(wartoscirgb, len, index, stride, width, height);
                 wczytany.UnlockBits(bmpData);
             };
         }
