@@ -25,7 +25,7 @@ namespace ECHO
     public partial class Form1 : Form
     {
         // ZMIENIĆ NA TYPY POBIERANE I ZWRACANE
-        delegate int GenerujEcho(byte[] tablica, int dlugosc_tablicy, int index, int stride, int width);
+        delegate int GenerujEcho(byte[] tablica, int dlugosc_tablicy, int index, int stride, int width, int len);
         private static readonly object klucz = new Object();
 
 
@@ -145,14 +145,16 @@ namespace ECHO
 
                             int stride = bmpData.Stride;
                             int width = bmpData.Width;
+                            int dlugosc = wartoscirgb.Length;
 
                             for (int i = 0; i < watki.Value; i++)
                             {
                                 int j = i; //wyscig
                                 int s = stride;
                                 int w = width;
+                                int d = dlugosc;
 
-                                Thread tmp = new Thread(() => fcja(wartoscirgb, dlugosci_przedzialow[j], poczatki_przedzialow[j], gen, s, w));
+                                Thread tmp = new Thread(() => fcja(wartoscirgb, dlugosci_przedzialow[j], poczatki_przedzialow[j], gen, s, w, d));
                                 zadania[j] = tmp;
                                 tmp.Start();
                             }
@@ -165,7 +167,7 @@ namespace ECHO
                         }
                         else
                         {
-                            gen(wartoscirgb, wartoscirgb.Length, 0, bmpData.Stride, bmpData.Width);
+                            gen(wartoscirgb, wartoscirgb.Length, 0, bmpData.Stride, bmpData.Width, wartoscirgb.Length);
                             wczytany.UnlockBits(bmpData);//?
                         }
                         
@@ -197,11 +199,11 @@ namespace ECHO
         }
 
         //ref jest konieczne, aby zmiana była zapisywana na zewnątrz
-        private void fcja(byte[] tablica, int len, int index, GenerujEcho gen, int stride, int width)
+        private void fcja(byte[] tablica, int len, int index, GenerujEcho gen, int stride, int width, int length)
         {
             lock (klucz) { //lock zapobiega utracie danych podczas jednoczesnego dostępu do zmiennej 
 
-                gen(wartoscirgb, len, index, stride, width);
+                gen(wartoscirgb, len, index, stride, width, length);
                 
             };
         }

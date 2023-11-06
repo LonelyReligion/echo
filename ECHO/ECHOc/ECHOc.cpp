@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "ECHOc.h"
 
-int GenerujEcho(unsigned char* wartosci_rgb, int dlugosc_tablicy, int index, int stride, int width) {
+int GenerujEcho(unsigned char* wartosci_rgb, int dlugosc_tablicy, int index, int stride, int width, int len) {
 	//it = rz¹d * stride + kolumna
 	int wiersz = index / stride;
 	int kolumna = index % stride;
@@ -12,24 +12,21 @@ int GenerujEcho(unsigned char* wartosci_rgb, int dlugosc_tablicy, int index, int
 
 	int przesunicie = 6;
 
-	unsigned char* wartosci_rgb_cpy = new unsigned char[dlugosc_tablicy];
-	memcpy(wartosci_rgb_cpy, wartosci_rgb, dlugosc_tablicy);
+	unsigned char* wartosci_rgb_cpy = new unsigned char[len];
+	memcpy(wartosci_rgb_cpy, wartosci_rgb, len);
 
-	unsigned char* wskaznik;
-	unsigned char* wskaznik_cpy;
+	unsigned char* wskaznik = wartosci_rgb + index;
+	unsigned char* wskaznik_cpy = index_wzgledny + wartosci_rgb_cpy;
 
-	wskaznik = index_wzgledny + wartosci_rgb;
-	wskaznik_cpy = index_wzgledny + wartosci_rgb_cpy;
-
-	while(index_wzgledny + wartosci_rgb < dlugosc_tablicy + index + wartosci_rgb) {
+	while(wskaznik < dlugosc_tablicy + index + wartosci_rgb /* && wskaznik_cpy < wartosci_rgb_cpy + index + dlugosc_tablicy && wskaznik_cpy > wartosci_rgb_cpy*/) {
 
 		//*wskaznik += 5;
 		
 		if (kolumna != ostatnia_kolumna) {
 			//zeby krawedzie sie nie zmienialy
-			if ((wskaznik_cpy - 3 * przesunicie) > (wartosci_rgb_cpy + wiersz * stride) && (wskaznik_cpy + 3 * przesunicie) < (wartosci_rgb_cpy + wiersz * stride + ostatnia_kolumna)) {
+			if ((wskaznik - 3 * przesunicie) > (wartosci_rgb + wiersz * stride) && (wskaznik+ 3 * przesunicie) < (wartosci_rgb + wiersz * stride + ostatnia_kolumna)) {
 				//*wskaznik = 0;
-				*wskaznik = *(wskaznik_cpy - 3 * przesunicie) * 0.2; //!
+				*wskaznik = *(index_wzgledny + wartosci_rgb_cpy - 3 * przesunicie) * 0.2; //!
 				if ((wskaznik_cpy - 3 * przesunicie * 4) > (wartosci_rgb_cpy + wiersz * stride) && (wskaznik_cpy + 3 * przesunicie * 4) < (wartosci_rgb_cpy + wiersz * stride + ostatnia_kolumna)) {
 					*wskaznik += *(wskaznik_cpy - 3 * przesunicie * 4) * 0.1;
 					*wskaznik += *(wskaznik_cpy + 3 * przesunicie) * 0.7;
