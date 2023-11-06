@@ -157,10 +157,9 @@ namespace ECHO
                                 tmp.Start();
                             }
                             wczytany.UnlockBits(bmpData);//?
-                            for (int i = 1; i < watki.Value; i++)
+                            foreach (var task in zadania)
                             {
-                                int j = i; //wyscig
-                                zadania[j].Join();
+                                task.Join();
                             }
 
                         }
@@ -200,7 +199,7 @@ namespace ECHO
         //ref jest konieczne, aby zmiana była zapisywana na zewnątrz
         private void fcja(byte[] tablica, int len, int index, GenerujEcho gen, int stride, int width)
         {
-            lock (klucz) { //lock zapobiega utracie danych podczas jednoczesnego dostępu do zmiennej wynik
+            lock (klucz) { //lock zapobiega utracie danych podczas jednoczesnego dostępu do zmiennej 
 
                 gen(wartoscirgb, len, index, stride, width);
                 
