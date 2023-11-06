@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
@@ -149,7 +150,7 @@ namespace ECHO
                                 int width = bmpData.Width;
                                 int height = bmpData.Height;
 
-                                Thread tmp = new Thread(() => fcja(wartoscirgb, dlugosci_przedzialow[j], poczatki_przedzialow[j], gen, stride, width, height));
+                                Thread tmp = new Thread(() => fcja(wartoscirgb, dlugosci_przedzialow[j], poczatki_przedzialow[j], gen, bmpData.Stride, bmpData.Width, bmpData.Height));
                                 zadania[j] = tmp;
                                 tmp.Start();
                             }
