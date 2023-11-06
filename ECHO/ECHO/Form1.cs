@@ -25,7 +25,7 @@ namespace ECHO
     public partial class Form1 : Form
     {
         // ZMIENIĆ NA TYPY POBIERANE I ZWRACANE
-        delegate int GenerujEcho(byte[] tablica, int dlugosc_tablicy, int index, int stride, int width, int height);
+        delegate int GenerujEcho(byte[] tablica, int dlugosc_tablicy, int index, int stride, int width);
         private static readonly object klucz = new Object();
 
 
@@ -118,8 +118,11 @@ namespace ECHO
 
                         //movxz - Copies the contents of the source operand (register or memory location) to the destination operand (register) and zero extends the value.
                         //The size of the converted value depends on the operand-size attribute.
+                        bmpData =
+                        //LockBits Blokuje pamięć systemową Bitmapy.
+                        wczytany.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite,
+                        wczytany.PixelFormat);
 
-                        
                         if (watki.Value > 1)//czemu?
                         {
                             Func<int, int, IEnumerable<int>> f = (a, b) => Enumerable.Range(0, a / b).Select((n) => a / b + ((a % b) <= n ? 0 : 1));
@@ -140,21 +143,20 @@ namespace ECHO
                                 dlugosci_przedzialow[i] = iloraz + (i <= modulo ? 1 : 0);      
                             }
 
-                            
+                            int stride = bmpData.Stride;
+                            int width = bmpData.Width;
 
                             for (int i = 0; i < watki.Value; i++)
                             {
                                 int j = i; //wyscig
+                                int s = stride;
+                                int w = width;
 
-                                int stride = bmpData.Stride;
-                                int width = bmpData.Width;
-                                int height = bmpData.Height;
-
-                                Thread tmp = new Thread(() => fcja(wartoscirgb, dlugosci_przedzialow[j], poczatki_przedzialow[j], gen, bmpData.Stride, bmpData.Width, bmpData.Height));
+                                Thread tmp = new Thread(() => fcja(wartoscirgb, dlugosci_przedzialow[j], poczatki_przedzialow[j], gen, s, w));
                                 zadania[j] = tmp;
                                 tmp.Start();
                             }
-
+                            wczytany.UnlockBits(bmpData);//?
                             for (int i = 1; i < watki.Value; i++)
                             {
                                 int j = i; //wyscig
@@ -164,7 +166,8 @@ namespace ECHO
                         }
                         else
                         {
-                            gen(wartoscirgb, wartoscirgb.Length, 0, bmpData.Stride, bmpData.Width, bmpData.Height);
+                            gen(wartoscirgb, wartoscirgb.Length, 0, bmpData.Stride, bmpData.Width);
+                            wczytany.UnlockBits(bmpData);//?
                         }
                         
 /*                        foreach(var elem in przykladowa) {
@@ -174,6 +177,7 @@ namespace ECHO
                         
                         System.Runtime.InteropServices.Marshal.Copy(wartoscirgb, 0, wskaznik, bytes);
                         // Odblokowuje 
+                        
                         obraz.Image = wczytany; 
 
                     }
@@ -194,15 +198,12 @@ namespace ECHO
         }
 
         //ref jest konieczne, aby zmiana była zapisywana na zewnątrz
-        private void fcja(byte[] tablica, int len, int index, GenerujEcho gen, int stride, int width, int height)
+        private void fcja(byte[] tablica, int len, int index, GenerujEcho gen, int stride, int width)
         {
             lock (klucz) { //lock zapobiega utracie danych podczas jednoczesnego dostępu do zmiennej wynik
-                bmpData =
-                //LockBits Blokuje pamięć systemową Bitmapy.
-                wczytany.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite,
-                wczytany.PixelFormat);
-                gen(wartoscirgb, len, index, stride, width, height);
-                wczytany.UnlockBits(bmpData);
+
+                gen(wartoscirgb, len, index, stride, width);
+                
             };
         }
         private void watki_ValueChanged(object sender, EventArgs e)

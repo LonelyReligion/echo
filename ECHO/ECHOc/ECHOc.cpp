@@ -1,17 +1,24 @@
 #include "pch.h"
 #include "ECHOc.h"
 
-int GenerujEcho(unsigned char* wartosci_rgb, int dlugosc_tablicy, int index, int stride, int width, int height) {
+int GenerujEcho(unsigned char* wartosci_rgb, int dlugosc_tablicy, int index, int stride, int width) {
 	//it = rz¹d * stride + kolumna
 	int wiersz = index / stride;
 	int kolumna = index % stride;
-	int index_wzgledny = 0;
+	int index_wzgledny = index;
 	
-	while(index_wzgledny + wartosci_rgb < dlugosc_tablicy + wartosci_rgb) {
+	int ostatnia_kolumna = width*3;
+
+	while(index_wzgledny + wartosci_rgb < dlugosc_tablicy + index + wartosci_rgb) {
+		
 		*(index_wzgledny + wartosci_rgb) += 5;
 
-		wiersz++;
-		kolumna += 3;
+		if(kolumna != ostatnia_kolumna)
+			kolumna += 1;
+		else {
+			wiersz++;
+			kolumna = 0;
+		}
 
 		index_wzgledny = wiersz * stride + kolumna;
 	};
