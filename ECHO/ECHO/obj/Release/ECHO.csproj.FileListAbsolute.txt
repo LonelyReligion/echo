@@ -1,6 +1,12 @@
 C:\Users\User\Desktop\PROGRAMOWANIE\JA\PROJEKT\echo\ECHO\ECHO\bin\Release\ECHO.exe.config
 C:\Users\User\Desktop\PROGRAMOWANIE\JA\PROJEKT\echo\ECHO\ECHO\bin\Release\ECHO.exe
 C:\Users\User\Desktop\PROGRAMOWANIE\JA\PROJEKT\echo\ECHO\ECHO\bin\Release\ECHO.pdb
+C:\Users\User\Desktop\PROGRAMOWANIE\JA\PROJEKT\echo\ECHO\ECHO\x64\Release\ECHO.exe.config
+C:\Users\User\Desktop\PROGRAMOWANIE\JA\PROJEKT\echo\ECHO\ECHO\x64\Release\ECHO.exe
+C:\Users\User\Desktop\PROGRAMOWANIE\JA\PROJEKT\echo\ECHO\ECHO\x64\Release\ECHO.pdb
+C:\Users\User\Desktop\PROGRAMOWANIE\JA\PROJEKT\echo\ECHO\x64\Release\ECHO.exe.config
+C:\Users\User\Desktop\PROGRAMOWANIE\JA\PROJEKT\echo\ECHO\x64\Release\ECHO.exe
+C:\Users\User\Desktop\PROGRAMOWANIE\JA\PROJEKT\echo\ECHO\x64\Release\ECHO.pdb
 C:\Users\User\Desktop\PROGRAMOWANIE\JA\PROJEKT\echo\ECHO\ECHO\obj\Release\ECHO.csproj.AssemblyReference.cache
 C:\Users\User\Desktop\PROGRAMOWANIE\JA\PROJEKT\echo\ECHO\ECHO\obj\Release\ECHO.Form1.resources
 C:\Users\User\Desktop\PROGRAMOWANIE\JA\PROJEKT\echo\ECHO\ECHO\obj\Release\ECHO.Properties.Resources.resources
@@ -8,9 +14,3 @@ C:\Users\User\Desktop\PROGRAMOWANIE\JA\PROJEKT\echo\ECHO\ECHO\obj\Release\ECHO.c
 C:\Users\User\Desktop\PROGRAMOWANIE\JA\PROJEKT\echo\ECHO\ECHO\obj\Release\ECHO.csproj.CoreCompileInputs.cache
 C:\Users\User\Desktop\PROGRAMOWANIE\JA\PROJEKT\echo\ECHO\ECHO\obj\Release\ECHO.exe
 C:\Users\User\Desktop\PROGRAMOWANIE\JA\PROJEKT\echo\ECHO\ECHO\obj\Release\ECHO.pdb
-C:\Users\User\Desktop\PROGRAMOWANIE\JA\PROJEKT\echo\ECHO\x64\Release\ECHO.exe.config
-C:\Users\User\Desktop\PROGRAMOWANIE\JA\PROJEKT\echo\ECHO\x64\Release\ECHO.exe
-C:\Users\User\Desktop\PROGRAMOWANIE\JA\PROJEKT\echo\ECHO\x64\Release\ECHO.pdb
-C:\Users\User\Desktop\PROGRAMOWANIE\JA\PROJEKT\echo\ECHO\ECHO\x64\Release\ECHO.exe.config
-C:\Users\User\Desktop\PROGRAMOWANIE\JA\PROJEKT\echo\ECHO\ECHO\x64\Release\ECHO.exe
-C:\Users\User\Desktop\PROGRAMOWANIE\JA\PROJEKT\echo\ECHO\ECHO\x64\Release\ECHO.pdb

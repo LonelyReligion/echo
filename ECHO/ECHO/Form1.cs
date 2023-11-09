@@ -118,21 +118,13 @@ namespace ECHO
                         long poczatek;
                         long koniec;
 
-                        //movxz - Copies the contents of the source operand (register or memory location) to the destination operand (register) and zero extends the value.
-                        //The size of the converted value depends on the operand-size attribute.
-                        
-/*                        bmpData =
-                        //LockBits Blokuje pamięć systemową Bitmapy.
-                        wczytany.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite,
-                        wczytany.PixelFormat);*/
-
                         var kopia_wartoscirgb = wartoscirgb;
 
-                        ///
+/*                        ///
                         for (int m = 1; m <= 64; m++)
                         {
                             watki.Value = m;
-                        ///
+                        ///*/
 
                             if (watki.Value > 1)//czemu?
                             {
@@ -163,15 +155,11 @@ namespace ECHO
                                 for (int i = 0; i < watki.Value; i++)
                                 {
                                     int j = i; //wyscig
-                                    int s = stride;
-                                    int w = width;
-                                    int d = dlugosc;
-
-                                    Thread tmp = new Thread(() => fcja(wartoscirgb, dlugosci_przedzialow[j], poczatki_przedzialow[j], gen, s, w, d, kopia_wartoscirgb));
+                                    Thread tmp = new Thread(() => gen(wartoscirgb, dlugosci_przedzialow[j], poczatki_przedzialow[j], stride, width, dlugosc, kopia_wartoscirgb));
                                     zadania[j] = tmp;
                                     tmp.Start();
                                 }
-                                //wczytany.UnlockBits(bmpData);//?
+
                                 foreach (var task in zadania)
                                 {
                                     task.Join();
@@ -183,23 +171,21 @@ namespace ECHO
                             {
                                 poczatek = Stopwatch.GetTimestamp();
                                 gen(wartoscirgb, wartoscirgb.Length, 0, bmpData.Stride, bmpData.Width, wartoscirgb.Length, kopia_wartoscirgb);
-                                //wczytany.UnlockBits(bmpData);//?
                                 koniec = Stopwatch.GetTimestamp();
                             }
 
                             System.Runtime.InteropServices.Marshal.Copy(wartoscirgb, 0, wskaznik, bytes);
-                            // Odblokowuje 
 
                             obraz.Image = wczytany;
-                            czaswykonania.Text = (koniec - poczatek).ToString() + " tiknięć";
-                        ///
+                            czaswykonania.Text = (koniec - poczatek /*sw.ElapsedMilliseconds*/).ToString() + " tiknięć";
+/*                        ///
                             using (StreamWriter writetext = File.AppendText("wyniki.txt"))
                             {
-                                writetext.WriteLine((koniec - poczatek).ToString());
+                                writetext.WriteLine((koniec - poczatek*//*sw.ElapsedMilliseconds*//*).ToString());
                             }
                         };
-                        ///
-/*                        wczytany.UnlockBits(bmpData);//?*/
+                        ///*/
+
                     }
                     else {
                         MessageBox.Show("Aby skorzystać z tej funkcji musisz wgrać bitmapę.");
@@ -216,16 +202,6 @@ namespace ECHO
             {
                 status.Text = "Nie znaleziono biblioteki";
             }
-        }
-
-        //ref jest konieczne, aby zmiana była zapisywana na zewnątrz
-        private void fcja(byte[] tablica, int len, int index, GenerujEcho gen, int stride, int width, int length, byte[] kopia_tablica)
-        {
-            lock (klucz) { //lock zapobiega utracie danych podczas jednoczesnego dostępu do zmiennej 
-
-                gen(wartoscirgb, len, index, stride, width, length, kopia_tablica);
-                
-            };
         }
         private void watki_ValueChanged(object sender, EventArgs e)
         {
