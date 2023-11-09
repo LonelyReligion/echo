@@ -125,7 +125,7 @@ namespace ECHO
 
                         if (watki.Value > 1)//czemu?
                         {
-                            Func<int, int, IEnumerable<int>> f = (a, b) => Enumerable.Range(0, a / b).Select((n) => a / b + ((a % b) <= n ? 0 : 1));
+                            //Func<int, int, IEnumerable<int>> f = (a, b) => Enumerable.Range(0, a / b).Select((n) => a / b + ((a % b) <= n ? 0 : 1));
 
                             int modulo = wartoscirgb.Length % Decimal.ToInt32(watki.Value);
                             int iloraz = wartoscirgb.Length / Decimal.ToInt32(watki.Value);
