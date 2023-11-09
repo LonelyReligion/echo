@@ -1,11 +1,11 @@
 ;rcx adres pierwszego elementu
 ;rdx liczba elementow
-;r9 index
+;r8 index
 
 .code
 GenerujEcho proc
 cmp RDX, 0 
-add RCX, R9
+add RCX, R8
 jle koniec
 
 dodawanie:

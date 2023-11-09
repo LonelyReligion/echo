@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -25,7 +26,7 @@ namespace ECHO
     public partial class Form1 : Form
     {
         // ZMIENIĆ NA TYPY POBIERANE I ZWRACANE
-        delegate int GenerujEcho(byte[] tablica, int dlugosc_tablicy, int index, int stride, int width, int len);
+        delegate int GenerujEcho(byte[] tablica, int dlugosc_tablicy, int index, int stride, int width, int len, byte[] tablica_kopia);
         private static readonly object klucz = new Object();
 
 
@@ -113,78 +114,97 @@ namespace ECHO
                     if (wartoscirgb?.Length > 0)
                     {
                         GenerujEcho gen = (GenerujEcho)Marshal.GetDelegateForFunctionPointer(procAddress, typeof(GenerujEcho));
-                        string wynik = "";
                         byte[] przykladowa = { 1, 2, 3 };
+                        long poczatek;
+                        long koniec;
 
                         //movxz - Copies the contents of the source operand (register or memory location) to the destination operand (register) and zero extends the value.
                         //The size of the converted value depends on the operand-size attribute.
-                        bmpData =
+                        
+/*                        bmpData =
                         //LockBits Blokuje pamięć systemową Bitmapy.
                         wczytany.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite,
-                        wczytany.PixelFormat);
+                        wczytany.PixelFormat);*/
 
-                        if (watki.Value > 1)//czemu?
+                        var kopia_wartoscirgb = wartoscirgb;
+
+                        ///
+                        for (int m = 1; m <= 64; m++)
                         {
-                            //Func<int, int, IEnumerable<int>> f = (a, b) => Enumerable.Range(0, a / b).Select((n) => a / b + ((a % b) <= n ? 0 : 1));
+                            watki.Value = m;
+                        ///
 
-                            int modulo = wartoscirgb.Length % Decimal.ToInt32(watki.Value);
-                            int iloraz = wartoscirgb.Length / Decimal.ToInt32(watki.Value);
-
-                            int[] poczatki_przedzialow = new int[Decimal.ToInt32(watki.Value)];
-                            int[] dlugosci_przedzialow = new int[Decimal.ToInt32(watki.Value)];
-                            
-                            Thread[] zadania = new Thread[Decimal.ToInt32(watki.Value)];
-
-                            poczatki_przedzialow[0] = 0;
-                            dlugosci_przedzialow[0] = iloraz;
-
-                            for (int i = 1; i < watki.Value; i++) {
-                                poczatki_przedzialow[i] = poczatki_przedzialow[i - 1] + dlugosci_przedzialow[i - 1];
-                                dlugosci_przedzialow[i] = iloraz + (i <= modulo ? 1 : 0);      
-                            }
-
-                            int stride = bmpData.Stride;
-                            int width = bmpData.Width;
-                            int dlugosc = wartoscirgb.Length;
-
-                            for (int i = 0; i < watki.Value; i++)
+                            if (watki.Value > 1)//czemu?
                             {
-                                int j = i; //wyscig
-                                int s = stride;
-                                int w = width;
-                                int d = dlugosc;
+                                //Func<int, int, IEnumerable<int>> f = (a, b) => Enumerable.Range(0, a / b).Select((n) => a / b + ((a % b) <= n ? 0 : 1));
 
-                                Thread tmp = new Thread(() => fcja(wartoscirgb, dlugosci_przedzialow[j], poczatki_przedzialow[j], gen, s, w, d));
-                                zadania[j] = tmp;
-                                tmp.Start();
+                                int modulo = wartoscirgb.Length % Decimal.ToInt32(watki.Value);
+                                int iloraz = wartoscirgb.Length / Decimal.ToInt32(watki.Value);
+
+                                int[] poczatki_przedzialow = new int[Decimal.ToInt32(watki.Value)];
+                                int[] dlugosci_przedzialow = new int[Decimal.ToInt32(watki.Value)];
+
+                                Thread[] zadania = new Thread[Decimal.ToInt32(watki.Value)];
+
+                                poczatki_przedzialow[0] = 0;
+                                dlugosci_przedzialow[0] = iloraz;
+
+                                for (int i = 1; i < watki.Value; i++)
+                                {
+                                    poczatki_przedzialow[i] = poczatki_przedzialow[i - 1] + dlugosci_przedzialow[i - 1];
+                                    dlugosci_przedzialow[i] = iloraz + (i <= modulo ? 1 : 0);
+                                }
+
+                                int stride = bmpData.Stride;
+                                int width = bmpData.Width;
+                                int dlugosc = wartoscirgb.Length;
+
+                                poczatek = Stopwatch.GetTimestamp();
+                                for (int i = 0; i < watki.Value; i++)
+                                {
+                                    int j = i; //wyscig
+                                    int s = stride;
+                                    int w = width;
+                                    int d = dlugosc;
+
+                                    Thread tmp = new Thread(() => fcja(wartoscirgb, dlugosci_przedzialow[j], poczatki_przedzialow[j], gen, s, w, d, kopia_wartoscirgb));
+                                    zadania[j] = tmp;
+                                    tmp.Start();
+                                }
+                                //wczytany.UnlockBits(bmpData);//?
+                                foreach (var task in zadania)
+                                {
+                                    task.Join();
+                                }
+                                koniec = Stopwatch.GetTimestamp();
+
                             }
-                            wczytany.UnlockBits(bmpData);//?
-                            foreach (var task in zadania)
+                            else
                             {
-                                task.Join();
+                                poczatek = Stopwatch.GetTimestamp();
+                                gen(wartoscirgb, wartoscirgb.Length, 0, bmpData.Stride, bmpData.Width, wartoscirgb.Length, kopia_wartoscirgb);
+                                //wczytany.UnlockBits(bmpData);//?
+                                koniec = Stopwatch.GetTimestamp();
                             }
 
-                        }
-                        else
-                        {
-                            gen(wartoscirgb, wartoscirgb.Length, 0, bmpData.Stride, bmpData.Width, wartoscirgb.Length);
-                            wczytany.UnlockBits(bmpData);//?
-                        }
-                        
-/*                        foreach(var elem in przykladowa) {
-                            wynik += elem.ToString();
+                            System.Runtime.InteropServices.Marshal.Copy(wartoscirgb, 0, wskaznik, bytes);
+                            // Odblokowuje 
+
+                            obraz.Image = wczytany;
+                            czaswykonania.Text = (koniec - poczatek).ToString() + " tiknięć";
+                        ///
+                            using (StreamWriter writetext = File.AppendText("wyniki.txt"))
+                            {
+                                writetext.WriteLine((koniec - poczatek).ToString());
+                            }
                         };
-                        status.Text = wynik;*/
-                        
-                        System.Runtime.InteropServices.Marshal.Copy(wartoscirgb, 0, wskaznik, bytes);
-                        // Odblokowuje 
-                        
-                        obraz.Image = wczytany; 
-
+                        ///
+/*                        wczytany.UnlockBits(bmpData);//?*/
                     }
                     else {
                         MessageBox.Show("Aby skorzystać z tej funkcji musisz wgrać bitmapę.");
                     }
+
                 }
                 else
                 {
@@ -199,15 +219,25 @@ namespace ECHO
         }
 
         //ref jest konieczne, aby zmiana była zapisywana na zewnątrz
-        private void fcja(byte[] tablica, int len, int index, GenerujEcho gen, int stride, int width, int length)
+        private void fcja(byte[] tablica, int len, int index, GenerujEcho gen, int stride, int width, int length, byte[] kopia_tablica)
         {
             lock (klucz) { //lock zapobiega utracie danych podczas jednoczesnego dostępu do zmiennej 
 
-                gen(wartoscirgb, len, index, stride, width, length);
+                gen(wartoscirgb, len, index, stride, width, length, kopia_tablica);
                 
             };
         }
         private void watki_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void czaswykonania_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void opisczaswykonania_Click(object sender, EventArgs e)
         {
 
         }
