@@ -13,8 +13,8 @@ int GenerujEcho(unsigned char* wartosci_rgb, int dlugosc_tablicy, int index, uns
 	unsigned char* wskaznik = wartosci_rgb + index;
 	unsigned char* wskaznik_cpy = index_wzgledny + wartosci_rgb_cpy;
 
-	while(wskaznik < dlugosc_tablicy + index + wartosci_rgb /* && wskaznik_cpy < wartosci_rgb_cpy + index + dlugosc_tablicy && wskaznik_cpy > wartosci_rgb_cpy*/) {
-		if (kolumna != ostatnia_kolumna) {
+	while(wskaznik < dlugosc_tablicy + index + wartosci_rgb) { //zrobione w asm
+		if (kolumna != ostatnia_kolumna) { //zrobione w asm
 			//zeby krawedzie sie nie zmienialy
 			if ((wskaznik - przesunicie) > (wartosci_rgb + wiersz * stride) && (wskaznik + przesunicie) < (wartosci_rgb + wiersz * stride + ostatnia_kolumna)) {
 				*wskaznik = *(wskaznik_cpy - przesunicie) * 0.2; //!
