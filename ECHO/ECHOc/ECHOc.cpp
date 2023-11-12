@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "ECHOc.h"
 
-int GenerujEcho(unsigned char* wartosci_rgb, int dlugosc_tablicy, int index, int stride, int width, int len, unsigned char* wartosci_rgb_cpy) {
+int GenerujEcho(unsigned char* wartosci_rgb, int dlugosc_tablicy, int index, unsigned char* wartosci_rgb_cpy, int width, int len, int stride) {
 	int wiersz = index / stride;
 	int kolumna = index % stride;
 	

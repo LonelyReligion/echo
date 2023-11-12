@@ -26,7 +26,7 @@ namespace ECHO
     public partial class Form1 : Form
     {
         // ZMIENIĆ NA TYPY POBIERANE I ZWRACANE
-        delegate int GenerujEcho(byte[] tablica, int dlugosc_tablicy, int index, int stride, int width, int len, byte[] tablica_kopia);
+        delegate int GenerujEcho(byte[] tablica, int dlugosc_tablicy, int index, byte[] tablica_kopia, int width, int len, int stride);
         private static readonly object klucz = new Object();
 
 
@@ -128,7 +128,7 @@ namespace ECHO
 
                             if (watki.Value > 1)//czemu?
                             {
-                                //Func<int, int, IEnumerable<int>> f = (a, b) => Enumerable.Range(0, a / b).Select((n) => a / b + ((a % b) <= n ? 0 : 1));
+
 
                                 int modulo = wartoscirgb.Length % Decimal.ToInt32(watki.Value);
                                 int iloraz = wartoscirgb.Length / Decimal.ToInt32(watki.Value);
@@ -155,7 +155,7 @@ namespace ECHO
                                 for (int i = 0; i < watki.Value; i++)
                                 {
                                     int j = i; //wyscig
-                                    Thread tmp = new Thread(() => gen(wartoscirgb, dlugosci_przedzialow[j], poczatki_przedzialow[j], stride, width, dlugosc, kopia_wartoscirgb));
+                                    Thread tmp = new Thread(() => gen(wartoscirgb, dlugosci_przedzialow[j], poczatki_przedzialow[j], kopia_wartoscirgb, width, dlugosc, stride));
                                     zadania[j] = tmp;
                                     tmp.Start();
                                 }
@@ -170,7 +170,7 @@ namespace ECHO
                             else
                             {
                                 poczatek = Stopwatch.GetTimestamp();
-                                gen(wartoscirgb, wartoscirgb.Length, 0, bmpData.Stride, bmpData.Width, wartoscirgb.Length, kopia_wartoscirgb);
+                                gen(wartoscirgb, wartoscirgb.Length, 0, kopia_wartoscirgb, bmpData.Width, wartoscirgb.Length, bmpData.Stride);
                                 koniec = Stopwatch.GetTimestamp();
                             }
 

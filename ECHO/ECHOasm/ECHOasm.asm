@@ -16,7 +16,6 @@ len				dword		0
 
 .code
 GenerujEcho proc
-cmp RDX, 0 
 add RCX, R8 ;dodajemy index
 add R9, R8
 
@@ -26,19 +25,35 @@ mov stride, EAX
 mov RAX, [rsp + 48] ;len
 mov len, EAX
 
-;cos w tym jest zle
-;mov RAX, [rsp + 40] ;width
-;mov R10, 3
-;mul R10 ;wynik jest w RAX
-;mov ostatniakolumna, EAX
+mov RAX, [rsp + 40] ;width
+mov ostatniakolumna, EAX
+add EAX, ostatniakolumna
+add EAX, ostatniakolumna
+mov ostatniakolumna, EAX
 
+cmp RDX, 0 
 jle koniec
 
 dodawanie:
 movzx RBX, BYTE PTR[RCX]
-add RBX, 5
+movzx RAX, BYTE PTR[R9]
+
+;musimy sprawdzic przepelnienie
+mov R11, 255
+
+add RBX, RAX
+cmp RBX, 255
+cmovg RBX, R11
+
+xor R11, R11
+cmp RBX, 0
+cmovl RBX, R11
+
 mov [RCX], BL ;rozmiar!!
+
 inc RCX
+inc R9
+
 dec RDX
 cmp RDX, 0 
 jg dodawanie ;jump if greater

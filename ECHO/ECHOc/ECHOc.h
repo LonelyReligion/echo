@@ -5,4 +5,4 @@
 #define HP2C_API __declspec(dllimport)
 #endif
 
-extern "C" HP2C_API int GenerujEcho(unsigned char* wartosci_rgb, int dlugosc_tablicy, int index, int stride, int width, int len, unsigned char* wartosci_rgb_cpy);
+extern "C" HP2C_API int GenerujEcho(unsigned char* wartosci_rgb, int dlugosc_tablicy, int index, unsigned char* wartosci_rgb_cpy, int width, int len, int stride);
