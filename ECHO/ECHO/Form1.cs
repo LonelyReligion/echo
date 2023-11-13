@@ -155,6 +155,7 @@ namespace ECHO
                                 for (int i = 0; i < watki.Value; i++)
                                 {
                                     int j = i; //wyscig
+                                    //Thread tmp = new Thread(() => fun(wartoscirgb, dlugosci_przedzialow[j], poczatki_przedzialow[j], kopia_wartoscirgb, width, dlugosc, stride, gen));
                                     Thread tmp = new Thread(() => gen(wartoscirgb, dlugosci_przedzialow[j], poczatki_przedzialow[j], kopia_wartoscirgb, width, dlugosc, stride));
                                     zadania[j] = tmp;
                                     tmp.Start();
@@ -181,7 +182,7 @@ namespace ECHO
 /*                        ///
                             using (StreamWriter writetext = File.AppendText("wyniki.txt"))
                             {
-                                writetext.WriteLine((koniec - poczatek*//*sw.ElapsedMilliseconds*//*).ToString());
+                                writetext.WriteLine((koniec - poczatek *//*sw.ElapsedMilliseconds*//*).ToString());
                             }
                         };
                         ///*/
@@ -201,6 +202,12 @@ namespace ECHO
             else
             {
                 status.Text = "Nie znaleziono biblioteki";
+            }
+        }
+
+        private void fun(byte[] wartoscirgb, int dlugosci_przedzialow, int poczatki_przedzialow, byte[] kopia_wartoscirgb, int width, int dlugosc, int stride, GenerujEcho gen) {
+            lock (klucz) {
+                gen(wartoscirgb, dlugosci_przedzialow, poczatki_przedzialow, kopia_wartoscirgb, width, dlugosc, stride);
             }
         }
         private void watki_ValueChanged(object sender, EventArgs e)
