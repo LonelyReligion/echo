@@ -46,6 +46,10 @@ cmp RDX, 0
 jle koniec
 
 dodawanie:
+mov EAX, kolumna
+cmp RAX, ostatniakolumna ;if (kolumna != ostatnia_kolumna)
+je kolumnatoostatniakolumna
+
 mov RCX, wskaznikrgb
 add RCX, R8
 mov R9, wskaznikrgb_cpy
@@ -53,11 +57,6 @@ add R9, R8
 
 movzx RBX, BYTE PTR[RCX]
 movzx RAX, BYTE PTR[R9]
-
-mov R11, RAX
-mov EAX, kolumna
-cmp RAX, ostatniakolumna ;if (kolumna != ostatnia_kolumna)
-je kolumnatoostatniakolumna
 
 sub RCX, 24 
 sub RCX, wskaznikrgb
@@ -72,6 +71,7 @@ jg nielewagranica
 
 inc kolumna
 
+;index_wzgledny = wiersz * stride + kolumna
 xor R8, R8
 mov R12, RDX
 mov EAX, wiersz
@@ -162,8 +162,6 @@ cmovl RBX, R11
 
 mov [RCX], BL ;rozmiar!!
 
-inc kolumna
-
 ;(wskaznik_cpy - przesunicie * 4) > (wartosci_rgb_cpy + wiersz * stride) przeklejone nie przetestowane
 sub RCX, 96 
 sub RCX, wskaznikrgb
@@ -175,7 +173,123 @@ mov RDX, R12
 sub RCX, RAX
 cmp RCX, 0
 jg nielewagranicaxcztery
+jmp niexcztery
 
+niexcztery:
+;
+mov R9, wskaznikrgb_cpy
+add R9, R8
+add R9, 24
+movzx RAX, BYTE PTR[R9]
+
+mov R11, RDX
+xor RDX, RDX
+mov R12, 10
+div R12
+mov R12, 8
+mul R12
+mov RDX, R11
+
+;przeklejone
+mov RCX, wskaznikrgb
+add RCX, R8
+
+add RBX, RAX
+
+mov R11, 255
+cmp RBX, 255
+cmovg RBX, R11
+
+xor R11, R11
+cmp RBX, 0
+cmovl RBX, R11
+
+mov [RCX], BL ;rozmiar!!
+
+inc kolumna
+jmp koniecpetli
+
+nielewagranicaxcztery:
+mov RCX, wskaznikrgb
+add RCX, R8
+add RCX, 96
+sub RCX, wskaznikrgb_cpy
+xor RAX, RAX
+mov EAX, wiersz
+mov R12, RDX
+mul stride 
+mov RDX, R12
+sub RCX, RAX
+sub RCX, ostatniakolumna
+cmp RCX, 0
+jl nieprawagranicaxcztery
+jmp niexcztery
+
+nieprawagranicaxcztery:
+mov RCX, wskaznikrgb
+add RCX, R8
+
+mov R9, wskaznikrgb_cpy
+add R9, R8
+sub R9,	96
+
+movzx RBX, BYTE PTR[RCX]
+movzx RAX, BYTE PTR[R9]
+
+
+mov R11, RDX
+xor RDX, RDX
+mov R12, 10
+div R12
+mov RDX, R11
+
+;przeklejone
+mov RCX, wskaznikrgb
+add RCX, R8
+
+add RBX, RAX
+
+mov R11, 255
+cmp RBX, 255
+cmovg RBX, R11
+
+xor R11, R11
+cmp RBX, 0
+cmovl RBX, R11
+
+mov [RCX], BL ;rozmiar!!
+
+;
+mov R9, wskaznikrgb_cpy
+add R9, R8
+add R9, 24
+movzx RAX, BYTE PTR[R9]
+
+mov R11, RDX
+xor RDX, RDX
+mov R12, 10
+div R12
+mov R12, 7
+mul R12
+mov RDX, R11
+
+;przeklejone
+mov RCX, wskaznikrgb
+add RCX, R8
+
+add RBX, RAX
+
+mov R11, 255
+cmp RBX, 255
+cmovg RBX, R11
+
+xor R11, R11
+cmp RBX, 0
+cmovl RBX, R11
+
+mov [RCX], BL ;rozmiar!!
+
+inc kolumna
 jmp koniecpetli
 
 GenerujEcho endp
