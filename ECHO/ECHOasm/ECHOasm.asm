@@ -4,21 +4,24 @@
 ;r9 to adres kopii
 
 .data
-przesuniecie	dword		24
-przesunieciex4	dword		96
+przesuniecie		dword		24
+przesunieciex4		dword		96
 
-stride			dword		0
+stride				dword		0
 
-ostatniakolumna dword		0	;width * 3
-len				dword		0
+ostatniakolumna		dword		0	;width * 3
+len					dword		0
 
-kolumna			dword		0
-wiersz			dword		0
+kolumna				dword		0
+wiersz				dword		0
+
+wskaznikrgb			qword		0
+wskaznikrgb_cpy		qword		0
 
 .code
 GenerujEcho proc
-add RCX, R8 ;dodajemy index
-add R9, R8
+mov wskaznikrgb, RCX
+mov wskaznikrgb_cpy, R9
 
 mov RAX, [rsp + 56] ;stride
 mov stride, EAX
@@ -44,6 +47,11 @@ cmp RDX, 0
 jle koniec
 
 dodawanie:
+mov RCX, wskaznikrgb
+add RCX, R8
+mov R9, wskaznikrgb_cpy
+add R9, R8
+
 movzx RBX, BYTE PTR[RCX]
 movzx RAX, BYTE PTR[R9]
 
@@ -66,8 +74,20 @@ cmovl RBX, R11
 
 mov [RCX], BL ;rozmiar!!
 
+inc kolumna
+
 inc RCX
 inc R9
+
+xor R8, R8
+mov R11, RAX
+mov R12, RDX
+mov EAX, wiersz
+mul stride
+add EAX, kolumna
+mov R8, RAX 
+mov RAX, R11
+mov RDX, R12
 
 dec RDX
 cmp RDX, 0 
@@ -82,11 +102,24 @@ mov kolumna, 0
 jmp koniecpetli
 
 koniecpetli:
+
 inc RCX
 inc R9
 
-dec RDX
-cmp RDX, 0 
+;index_wzgledny = wiersz * stride + kolumna
+xor R8, R8
+mov R11, RAX
+mov R12, RDX
+mov EAX, wiersz
+mul stride
+add EAX, kolumna
+mov R8, RAX 
+mov RAX, R11
+mov RDX, R12
+;
+
+dec RDX ;dlugosc tablicy - 1
+cmp RDX, 0 ; dlugosc tablicy > 0?
 jg dodawanie ;while(wskaznik < dlugosc_tablicy + index + wartosci_rgb)
 
 
