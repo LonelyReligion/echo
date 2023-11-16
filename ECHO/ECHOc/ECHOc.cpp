@@ -19,11 +19,11 @@ int GenerujEcho(unsigned char* wartosci_rgb, int dlugosc_tablicy, int index, uns
 			if ((wskaznik - przesunicie) > (wartosci_rgb + wiersz * stride) && (wskaznik + przesunicie) < (wartosci_rgb + wiersz * stride + ostatnia_kolumna)) { //zrobione w asm
 				*wskaznik = *(wskaznik_cpy - przesunicie) * 0.2; //zrobione w asm
 				if ((wskaznik_cpy - przesunicie * 4) > (wartosci_rgb_cpy + wiersz * stride) && (wskaznik_cpy + przesunicie * 4) < (wartosci_rgb_cpy + wiersz * stride + ostatnia_kolumna)) {//zrobione w asm
-					*wskaznik += *(wskaznik_cpy - przesunicie * 4) * 0.1; //zrobione w asm
-					*wskaznik += *(wskaznik_cpy + przesunicie) * 0.7; //zrobione w asm
+					;// *wskaznik += *(wskaznik_cpy - przesunicie * 4) * 0.1; //zrobione w asm
+					;//*wskaznik += *(wskaznik_cpy + przesunicie) * 0.7; //zrobione w asm
 				}
 				else
-					*wskaznik += *(wskaznik_cpy + przesunicie) * 0.8;
+					;//*wskaznik += *(wskaznik_cpy + przesunicie) * 0.8;
 			}
 			kolumna++;
 		}
