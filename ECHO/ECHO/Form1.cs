@@ -26,7 +26,7 @@ namespace ECHO
     public partial class Form1 : Form
     {
         // ZMIENIĆ NA TYPY POBIERANE I ZWRACANE
-        delegate int GenerujEcho(byte[] tablica, int dlugosc_tablicy, int index, byte[] tablica_kopia, int width, int len, int stride);
+        delegate int GenerujEcho(byte[] tablica, int dlugosc_tablicy, int index, byte[] tablica_kopia, int width, int stride);
         private static readonly object klucz = new Object();
 
 
@@ -120,7 +120,7 @@ namespace ECHO
 
                         var kopia_wartoscirgb = wartoscirgb;
 
-/*                        ///
+/*                       ///
                         for (int m = 1; m <= 64; m++)
                         {
                             watki.Value = m;
@@ -149,14 +149,13 @@ namespace ECHO
 
                                 int stride = bmpData.Stride;
                                 int width = bmpData.Width;
-                                int dlugosc = wartoscirgb.Length;
 
                                 poczatek = Stopwatch.GetTimestamp();
                                 for (int i = 0; i < watki.Value; i++)
                                 {
                                     int j = i; //wyscig
                                     //Thread tmp = new Thread(() => fun(wartoscirgb, dlugosci_przedzialow[j], poczatki_przedzialow[j], kopia_wartoscirgb, width, dlugosc, stride, gen));
-                                    Thread tmp = new Thread(() => gen(wartoscirgb, dlugosci_przedzialow[j], poczatki_przedzialow[j], kopia_wartoscirgb, width, dlugosc, stride));
+                                    Thread tmp = new Thread(() => gen(wartoscirgb, dlugosci_przedzialow[j], poczatki_przedzialow[j], kopia_wartoscirgb, width, stride));
                                     zadania[j] = tmp;
                                     tmp.Start();
                                 }
@@ -171,7 +170,7 @@ namespace ECHO
                             else
                             {
                                 poczatek = Stopwatch.GetTimestamp();
-                                gen(wartoscirgb, wartoscirgb.Length, 0, kopia_wartoscirgb, bmpData.Width, wartoscirgb.Length, bmpData.Stride);
+                                gen(wartoscirgb, wartoscirgb.Length, 0, kopia_wartoscirgb, bmpData.Width, bmpData.Stride);
                                 koniec = Stopwatch.GetTimestamp();
                             }
 
@@ -207,7 +206,7 @@ namespace ECHO
 
         private void fun(byte[] wartoscirgb, int dlugosci_przedzialow, int poczatki_przedzialow, byte[] kopia_wartoscirgb, int width, int dlugosc, int stride, GenerujEcho gen) {
             lock (klucz) {
-                gen(wartoscirgb, dlugosci_przedzialow, poczatki_przedzialow, kopia_wartoscirgb, width, dlugosc, stride);
+                gen(wartoscirgb, dlugosci_przedzialow, poczatki_przedzialow, kopia_wartoscirgb, width, stride);
             }
         }
         private void watki_ValueChanged(object sender, EventArgs e)

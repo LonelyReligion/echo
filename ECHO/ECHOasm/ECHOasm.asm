@@ -6,22 +6,21 @@
 .data
 stride				qword		0
 ostatniakolumna		qword		0	;width * 3
-len					qword		0
 kolumna				qword		0
 wiersz				qword		0
 wskaznikrgb			qword		0
 wskaznikrgb_cpy		qword		0
+poczatek			qword		0
 
 .code
 GenerujEcho proc
+mov poczatek, R8
+
 mov wskaznikrgb, RCX
 mov wskaznikrgb_cpy, R9
 
-mov RAX, [rsp + 56] ;stride
+mov RAX, [rsp + 48] ;stride
 mov stride, RAX
-
-mov RAX, [rsp + 48] ;len
-mov len, RAX
 
 mov RAX, [rsp + 40] ;width
 mov ostatniakolumna, RAX
@@ -42,6 +41,14 @@ cmp R12, 0
 jle koniec
 
 dodawanie:
+;wskaznik < dlugosc_tablicy + index + wartosci_rgb
+xor RAX, RAX
+mov RAX, R8
+sub RAX, poczatek
+sub RAX, R12
+cmp RAX, 0 
+jge koniec 
+
 mov RAX, kolumna
 cmp RAX, ostatniakolumna ;if (kolumna != ostatnia_kolumna)
 je kolumnatoostatniakolumna
@@ -61,16 +68,12 @@ jg nielewagranica
 inc kolumna
 
 ;index_wzgledny = wiersz * stride + kolumna
-xor R8, R8
-
 mov RAX, wiersz
 mul stride
 add RAX, kolumna
 mov R8, RAX 
 
-dec R12
-cmp R12, 0 
-jg dodawanie ;while(liczbaelementow > 0)
+jmp dodawanie
 
 koniec:
 ret
@@ -85,17 +88,12 @@ inc kolumna
 
 koniecpetli:
 ;index_wzgledny = wiersz * stride + kolumna
-xor R8, R8
-xor RAX, RAX
 mov RAX, wiersz
 mul stride
 add RAX, kolumna
 mov R8, RAX 
 
-dec R12 ;dlugosc tablicy - 1
-cmp R12, 0 ; dlugosc tablicy > 0?
-jg dodawanie ;while(wskaznik < dlugosc_tablicy + index + wartosci_rgb)
-jmp koniec
+jmp dodawanie
 
 nielewagranica:
 ;(wskaznik + przesunicie) < (wartosci_rgb + wiersz * stride + ostatnia_kolumna)
@@ -120,15 +118,9 @@ mov R9, wskaznikrgb_cpy
 sub R9, 24
 add R9, R8
 
-xor R11, R11
-mov R11, len
-add R11, wskaznikrgb_cpy
-cmp R11, R9 
-
-jle koniecpetliikolumna
+mov RDX, wskaznikrgb_cpy
 
 movzx RAX, BYTE PTR[R9]
-
 
 mov R11, 2
 mul R11
@@ -164,129 +156,111 @@ jmp niexcztery
 
 niexcztery:
 ;*wskaznik += *(wskaznik_cpy + przesunicie) * 0.8
-;mov R9, wskaznikrgb_cpy
-;add R9, R8
-;add R9, 24
+mov R9, wskaznikrgb_cpy
+add R9, R8
+add R9, 24
 
-;xor R11, R11
-;mov R11, len
-;add R11, wskaznikrgb_cpy
-;cmp R11, R9 
-;jle koniecpetliikolumna
+movzx RAX, BYTE PTR[R9]
 
-;movzx RAX, BYTE PTR[R9]
-
-;xor RDX, RDX
-;mov R11, 8
-;mul R11
-;mov R11, 10
-;div R11
+xor RDX, RDX
+mov R11, 8
+mul R11
+mov R11, 10
+div R11
 
 
-;mov RCX, wskaznikrgb
-;add RCX, R8
-;movzx RBX, BYTE PTR[RCX]
+mov RCX, wskaznikrgb
+add RCX, R8
+movzx RBX, BYTE PTR[RCX]
 
-;add RBX, RAX
-
+add RBX, RAX
+ 
 ;musimy sprawdzic przepelnienie
-;mov R11, 255
-;cmp RBX, 255
-;cmovg RBX, R11
+mov R11, 255
+cmp RBX, 255
+cmovg RBX, R11
 
-;xor R11, R11
-;cmp RBX, 0
-;cmovl RBX, R11
+xor R11, R11
+cmp RBX, 0
+cmovl RBX, R11
 
-;mov [RCX], BL ;rozmiar!!
+mov [RCX], BL ;rozmiar!!
 
 jmp koniecpetliikolumna
 
 nielewagranicaxcztery:
 ; (wskaznik_cpy + przesunicie * 4) < (wartosci_rgb_cpy + wiersz * stride + ostatnia_kolumna)
-;mov RCX, wskaznikrgb_cpy
-;add RCX, R8
-;add RCX, 96
-;sub RCX, wskaznikrgb_cpy
-;xor RAX, RAX
-;mov EAX, wiersz
-;mul stride 
-;sub RCX, RAX
-;sub RCX, ostatniakolumna
-;cmp RCX, 0
-;jl nieprawagranicaxcztery
+mov RCX, wskaznikrgb_cpy
+add RCX, R8
+add RCX, 96
+sub RCX, wskaznikrgb_cpy
+xor RAX, RAX
+mov RAX, wiersz
+mul stride 
+sub RCX, RAX
+sub RCX, ostatniakolumna
+cmp RCX, 0
+jl nieprawagranicaxcztery
 jmp niexcztery
 
 nieprawagranicaxcztery:
 ;*wskaznik += *(wskaznik_cpy - przesunicie * 4) * 0.1;
-;mov RCX, wskaznikrgb
-;add RCX, R8
+mov RCX, wskaznikrgb
+add RCX, R8
 
-;mov R9, wskaznikrgb_cpy
-;add R9, R8
-;sub R9, 96
+mov R9, wskaznikrgb_cpy
+add R9, R8
+sub R9, 96
 
-;xor R11, R11
-;mov R11, len
-;add R11, wskaznikrgb_cpy
-;cmp R11, R9 
-;jle koniecpetli
+movzx RBX, BYTE PTR[RCX]
+movzx RAX, BYTE PTR[R9]
 
-;movzx RBX, BYTE PTR[RCX]
-;movzx RAX, BYTE PTR[R9]
+xor RDX, RDX
+mov R11, 10
+div R11
 
-;xor RDX, RDX
-;mov R11, 10
-;div R11
-
-;add RBX, RAX
+add RBX, RAX
 
 ;musimy sprawdzic przepelnienie
-;mov R11, 255
-;cmp RBX, 255
-;cmovg RBX, R11
+mov R11, 255
+cmp RBX, 255
+cmovg RBX, R11
 
-;xor R11, R11
-;cmp RBX, 0
-;cmovl RBX, R11
+xor R11, R11
+cmp RBX, 0
+cmovl RBX, R11
 
-;mov [RCX], BL ;rozmiar!!
+mov [RCX], BL ;rozmiar!!
 
 ;*wskaznik += *(wskaznik_cpy + przesunicie) * 0.7;
-;mov R9, wskaznikrgb_cpy
-;add R9, R8
-;add R9, 24
+mov R9, wskaznikrgb_cpy
+add R9, R8
+add R9, 24
 
-;xor R11, R11
-;mov R11, len
-;add R11, wskaznikrgb_cpy
-;cmp R11, R9 
-;jle koniecpetli
+movzx RAX, BYTE PTR[R9] ;<-wyjatkogenne
 
-;movzx RAX, BYTE PTR[R9] ;<-wyjatkogenne
+xor RDX, RDX
+mov R11, 10
+div R11
+mov R11, 7
+mul R11
 
-;xor RDX, RDX
-;mov R11, 10
-;div R11
-;mov R11, 7
-;mul R11
+mov RCX, wskaznikrgb
+add RCX, R8
+movzx RBX, BYTE PTR[RCX]
 
-;mov RCX, wskaznikrgb
-;add RCX, R8
-;movzx RBX, BYTE PTR[RCX]
-
-;add RBX, RAX
+add RBX, RAX
 
 ;musimy sprawdzic przepelnienie
-;mov R11, 255
-;cmp RBX, 255
-;cmovg RBX, R11
+mov R11, 255
+cmp RBX, 255
+cmovg RBX, R11
 
-;xor R11, R11
-;cmp RBX, 0
-;cmovl RBX, R11
+xor R11, R11
+cmp RBX, 0
+cmovl RBX, R11
 
-;mov [RCX], BL ;rozmiar!!
+mov [RCX], BL ;rozmiar!!
 
 jmp koniecpetliikolumna
 
