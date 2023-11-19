@@ -148,14 +148,14 @@ namespace ECHO
                                 }
 
                                 int stride = bmpData.Stride;
-                                int width = bmpData.Width;
+                                int ostatnia_kolumna = bmpData.Width * 3;
 
                                 poczatek = Stopwatch.GetTimestamp();
                                 for (int i = 0; i < watki.Value; i++)
                                 {
                                     int j = i; //wyscig
                                     //Thread tmp = new Thread(() => fun(wartoscirgb, dlugosci_przedzialow[j], poczatki_przedzialow[j], kopia_wartoscirgb, width, dlugosc, stride, gen));
-                                    Thread tmp = new Thread(() => gen(wartoscirgb, dlugosci_przedzialow[j], poczatki_przedzialow[j], kopia_wartoscirgb, width, stride));
+                                    Thread tmp = new Thread(() => gen(wartoscirgb, dlugosci_przedzialow[j], poczatki_przedzialow[j], kopia_wartoscirgb, ostatnia_kolumna, stride));
                                     zadania[j] = tmp;
                                     tmp.Start();
                                 }
@@ -170,7 +170,7 @@ namespace ECHO
                             else
                             {
                                 poczatek = Stopwatch.GetTimestamp();
-                                gen(wartoscirgb, wartoscirgb.Length, 0, kopia_wartoscirgb, bmpData.Width, bmpData.Stride);
+                                gen(wartoscirgb, wartoscirgb.Length, 0, kopia_wartoscirgb, bmpData.Width*3, bmpData.Stride);
                                 koniec = Stopwatch.GetTimestamp();
                             }
 
