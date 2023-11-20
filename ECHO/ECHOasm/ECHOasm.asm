@@ -1,96 +1,63 @@
 ;rcx adres pierwszego elementu
-;rdx -> r12 liczba elementow
+;rdx->r12 liczba elementow
 ;r8 index
 ;r9 to adres kopii
 
-.data
-wartoscirgb			qword		0
-wartoscirgb_cpy		qword		0
-dlugosc_tablicy		qword		0
-index				qword		0
-ostatnia_kolumna	qword		0
-stride				qword		0
-wiersz				qword		0
-kolumna				qword		0
-wskaznik			qword		0
-wskaznik_cpy		qword		0
-index_wzgledny		qword		0
-
 .code
 GenerujEcho proc
-mov wartoscirgb, RCX
-mov wartoscirgb_cpy, R9
-mov	dlugosc_tablicy, RDX
-mov index, R8
-mov index_wzgledny, R8
+dec R8
+mov R12, RDX 
 
-mov RAX, [rsp + 40]
-mov ostatnia_kolumna, RAX
-
-mov RAX, [rsp + 48]
-mov stride, RAX 
-
-xor RDX, RDX
-mov RAX, index
-div stride
-mov wiersz, RAX
-mov kolumna, RDX
-
-mov RAX, wartoscirgb
-add RAX, index
-mov wskaznik, RAX
-
-mov RAX, wartoscirgb_cpy
-add RAX, index
-mov wskaznik_cpy, RAX
+inkrementacja_indexu:
+inc R8
 
 dodawanie:
-;while(wskaznik < dlugosc_tablicy + index + wartosci_rgb)
-mov RAX, wskaznik
-sub RAX, dlugosc_tablicy
-sub RAX, index
-sub RAX, wartoscirgb
-cmp RAX, 0
-jge	koniec
+cmp R12, 0
+jle koniec
 
-mov RCX, wskaznik
-mov RBX, 0
-mov [RCX], BL
+; sprawdzamy czy jestesmy co najmniej 24 elementy od krawedzi
+mov R10, R8
+sub R10, 24
+cmp R10, 0
+jl inkrementacja_indexu
+;
 
-mov RAX, kolumna
-cmp RAX, ostatnia_kolumna
-je toostatniakolumna
+add RCX, R8
+add R9, R8
+sub R9, 24
+movzx RAX, BYTE PTR[R9]
 
-inc kolumna
-jmp liczonsko
+mov R11, 2
+mul R11
+mov R11, 10
+div R11
+
+mov RBX, RAX
+
+;musimy sprawdzic przepelnienie
+mov R11, 255
+cmp RBX, 255
+cmovg RBX, R11
+
+xor R11, R11
+cmp RBX, 0
+cmovl RBX, R11
+
+mov [RCX], BL 
+
+;naprawiamy wartosci
+sub RCX, R8
+add R9, 24
+sub R9, R8
+;
+
+inc R8 ;index
+dec R12 ;liczba elementow do przerobienia
+
+jmp dodawanie
 
 koniec:
 ret
-
-toostatniakolumna:
-inc wiersz
-mov kolumna, 0
-jmp liczonsko
-
-liczonsko:
-; index_wzgledny = wiersz * stride + kolumna
-xor RDX, RDX
-mov RAX, wiersz
-mul stride
-add RAX, kolumna
-mov index_wzgledny, rax
-
-; wskaznik = index_wzgledny + wartosci_rgb
-mov RAX, wartoscirgb
-add RAX, index_wzgledny
-mov wskaznik, RAX
-
-; wskaznik_cpy = index_wzgledny + wartosci_rgb_cpy
-mov RAX, wartoscirgb_cpy
-add RAX, index_wzgledny
-mov wskaznik_cpy, RAX
-
-jmp dodawanie
 
 GenerujEcho endp
 end
