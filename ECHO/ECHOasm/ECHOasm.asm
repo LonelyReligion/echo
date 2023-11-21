@@ -113,7 +113,13 @@ mov R9, wskaznikrgb_cpy
 sub R9, 24
 add R9, R8
 
-mov RDX, wskaznikrgb_cpy
+mov RCX, wskaznikrgb
+add RCX, R8
+
+mov R11, ostatniakolumna
+sub R11, R14
+cmp R11, 16
+jge movxmm
 
 movzx RAX, BYTE PTR[R9]
 
@@ -121,9 +127,6 @@ mov R11, 2
 mul R11
 mov R11, 10
 div R11
-
-mov RCX, wskaznikrgb
-add RCX, R8
 
 mov RBX, RAX
 
@@ -138,6 +141,7 @@ cmovl RBX, R11
 
 mov [RCX], BL ;rozmiar!!
 
+warunekponieprawagranica:
 ;(wskaznik_cpy - przesunicie * 4) > (wartosci_rgb_cpy + R13 * stride) przeklejone
 mov RCX, R8
 sub RCX, 96 
@@ -148,6 +152,21 @@ sub RCX, RAX
 cmp RCX, 0
 jg nielewagranicaxcztery
 jmp niexcztery
+
+movxmm:
+movups xmm0, [R9]
+
+pxor xmm1, xmm1 ;0
+pcmpeqd xmm2, xmm2 ;255
+
+PCMPEQW xmm1, xmm0
+PCMPEQW xmm2, xmm0 ;greater than
+
+;odczytac wyniki
+;zamienic 
+
+movups [RCX], xmm0
+jmp warunekponieprawagranica
 
 niexcztery:
 ;*wskaznik += *(wskaznik_cpy + przesunicie) * 0.8
