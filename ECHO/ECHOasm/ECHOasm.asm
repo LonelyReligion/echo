@@ -1,7 +1,7 @@
 ;rcx adres pierwszego elementu
 ;rdx->r12 liczba elementow
 ;r8 index
-;r9 to adres kopii
+;R9 to adres kopii
 
 .code
 GenerujEcho proc
@@ -16,9 +16,9 @@ dodawanie:
 cmp R12, 0
 jl koniec
 
-; sprawdzamy czy jestesmy co najmniej 24 elementy od krawedzi
+; sprawdzamy czy jestesmy co najmniej 3 elementy od krawedzi
 mov R10, R8
-sub R10, 21
+sub R10, 3
 cmp R10, 0
 jl inkrementacja_indexu
 ;
@@ -26,14 +26,14 @@ jl inkrementacja_indexu
 add RCX, R8
 
 add R9, R8
-sub R9, 21
+sub R9, 3
 
 movups xmm0, [R9]
 movups [RCX], xmm0
 
 sub RCX, R8
 sub R9, R8
-add R9, 21
+add R9, 3
 
 add R8, 16 ;index
 sub R12, 16;liczba elementow do przerobienia
@@ -45,16 +45,17 @@ jmp dodawanie_liniowo
 dodawanie_liniowo:
 cmp R12, 0
 jl koniec
+
 add RCX, R8
 
 add R9, R8
-sub R9, 21
+sub R9, 3
 
-mov RCX, [R9]
+mov CL, byte ptr[R9]
 
 sub RCX, R8
 sub R9, R8
-add R9, 21
+add R9, 3
 
 dec R12
 inc R8
