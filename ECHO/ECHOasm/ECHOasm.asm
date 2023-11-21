@@ -14,52 +14,51 @@ dec R12
 
 dodawanie:
 cmp R12, 0
-jle koniec
+jl koniec
 
 ; sprawdzamy czy jestesmy co najmniej 24 elementy od krawedzi
 mov R10, R8
-sub R10, 24
+sub R10, 21
 cmp R10, 0
 jl inkrementacja_indexu
 ;
 
 add RCX, R8
 
-mov R10, R9
-add R10, R8
-add R10, 24
+add R9, R8
+sub R9, 21
 
-xor RAX, RAX
-mov AL, BYTE PTR[R10]
+movups xmm0, [R9]
+movups [RCX], xmm0
 
-mov R11, 2
-mul R11
-mov R11, 10
-div R11
-
-xor RBX, RBX
-mov BL, BYTE PTR[RCX]
-
-mov RBX, RAX
-
-;musimy sprawdzic przepelnienie
-mov R11, 255
-cmp RBX, 255
-cmovg RBX, R11
-
-xor R11, R11
-cmp RBX, 0
-cmovl RBX, R11
-
-mov [RCX], BL 
-
-;naprawiamy wartosci
 sub RCX, R8
+sub R9, R8
+add R9, 21
 
-inc R8 ;index
-dec R12 ;liczba elementow do przerobienia
+add R8, 16 ;index
+sub R12, 16;liczba elementow do przerobienia
+jz koniec
+cmp R12, 16
+jge dodawanie
+jmp dodawanie_liniowo
 
-jnz dodawanie
+dodawanie_liniowo:
+cmp R12, 0
+jl koniec
+add RCX, R8
+
+add R9, R8
+sub R9, 21
+
+mov RCX, [R9]
+
+sub RCX, R8
+sub R9, R8
+add R9, 21
+
+dec R12
+inc R8
+jmp dodawanie_liniowo
 
 koniec:
 ret
