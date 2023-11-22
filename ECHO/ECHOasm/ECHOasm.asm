@@ -9,6 +9,7 @@ ostatniakolumna		qword		0
 
 wskaznikrgb			qword		0
 wskaznikrgb_cpy		qword		0
+dzielnik			dd			10
 
 .code
 GenerujEcho proc
@@ -117,9 +118,9 @@ mov RCX, wskaznikrgb
 add RCX, R8
 
 mov R11, ostatniakolumna
-sub R11, R14
+sub R11, R14 ;ostatnia kolumna - kolumna
 cmp R11, 16
-jge movxmm
+jge movxmm ;>=16
 
 movzx RAX, BYTE PTR[R9]
 
@@ -131,13 +132,13 @@ div R11
 mov RBX, RAX
 
 ;musimy sprawdzic przepelnienie
-mov R11, 255
-cmp RBX, 255
-cmovg RBX, R11
+;mov R11, 255
+;cmp RBX, 255
+;cmovg RBX, R11
 
-xor R11, R11
-cmp RBX, 0
-cmovl RBX, R11
+;xor R11, R11
+;cmp RBX, 0
+;cmovl RBX, R11
 
 mov [RCX], BL ;rozmiar!!
 
@@ -156,14 +157,14 @@ jmp niexcztery
 movxmm:
 movups xmm0, [R9]
 
-pxor xmm1, xmm1 ;0
-pcmpeqd xmm2, xmm2 ;255
+addps xmm0, xmm0
 
-PCMPEQW xmm1, xmm0
-PCMPEQW xmm2, xmm0 ;greater than
+movss xmm1, dzielnik
+cvtdq2ps xmm0, xmm0
+divps xmm0, xmm1 
+cvttps2dq xmm0, xmm0
 
-;odczytac wyniki
-;zamienic 
+;porownanie
 
 movups [RCX], xmm0
 jmp warunekponieprawagranica
