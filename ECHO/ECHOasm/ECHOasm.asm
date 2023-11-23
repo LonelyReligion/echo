@@ -9,7 +9,6 @@ ostatniakolumna		qword		0
 
 wskaznikrgb			qword		0
 wskaznikrgb_cpy		qword		0
-dzielnik			dd			10
 
 .code
 GenerujEcho proc
@@ -119,14 +118,14 @@ add RCX, R8
 
 mov R11, ostatniakolumna
 sub R11, R14 ;ostatnia kolumna - kolumna
-cmp R11, 16
+cmp R11, 48
 jge movxmm ;>=16
 
 movzx RAX, BYTE PTR[R9]
 
-mov R11, 2
+mov R11, 3
 mul R11
-mov R11, 10
+mov R11, 16
 div R11
 
 mov RBX, RAX
@@ -155,18 +154,19 @@ jg nielewagranicaxcztery
 jmp niexcztery
 
 movxmm:
-movups xmm0, [R9]
+;mnozenie razy 3
+vmovups xmm0, xmmword ptr[R9]
+vpmovzxbw ymm2, xmm0
 
-addps xmm0, xmm0
+vpaddw ymm0, ymm2, ymm2
+vpaddw ymm2, ymm0, ymm2
 
-movss xmm1, dzielnik
-cvtdq2ps xmm0, xmm0
-divps xmm0, xmm1 
-cvttps2dq xmm0, xmm0
-
+;dzielenie przez 16
+vpsrlw ymm2, ymm2, 4
+vpermq ymm0, ymm2, 11011000b
 ;porownanie
 
-movups [RCX], xmm0
+vmovups [RCX], xmm0
 jmp warunekponieprawagranica
 
 niexcztery:
@@ -178,11 +178,10 @@ add R9, 24
 movzx RAX, BYTE PTR[R9]
 
 xor RDX, RDX
-mov R11, 8
+mov R11, 13
 mul R11
-mov R11, 10
+mov R11, 16
 div R11
-
 
 mov RCX, wskaznikrgb
 add RCX, R8
@@ -226,12 +225,11 @@ add RCX, R8
 mov R9, wskaznikrgb_cpy
 add R9, R8
 sub R9, 96
-
 movzx RBX, BYTE PTR[RCX]
 movzx RAX, BYTE PTR[R9]
 
 xor RDX, RDX
-mov R11, 10
+mov R11, 16
 div R11
 
 add RBX, RAX
@@ -255,9 +253,9 @@ add R9, 24
 movzx RAX, BYTE PTR[R9] ;<-wyjatkogenne
 
 xor RDX, RDX
-mov R11, 10
+mov R11, 8
 div R11
-mov R11, 7
+mov R11, 6
 mul R11
 
 mov RCX, wskaznikrgb
