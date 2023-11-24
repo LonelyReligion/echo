@@ -118,8 +118,9 @@ add RCX, R8
 
 mov R11, ostatniakolumna
 sub R11, R14 ;ostatnia kolumna - kolumna
+
 cmp R11, 48
-jge movxmm ;>=16
+jge movxmm 
 
 movzx RAX, BYTE PTR[R9]
 
@@ -131,13 +132,13 @@ div R11
 mov RBX, RAX
 
 ;musimy sprawdzic przepelnienie
-;mov R11, 255
-;cmp RBX, 255
-;cmovg RBX, R11
+mov R11, 255
+cmp RBX, 255
+cmovg RBX, R11
 
-;xor R11, R11
-;cmp RBX, 0
-;cmovl RBX, R11
+xor R11, R11
+cmp RBX, 0
+cmovl RBX, R11
 
 mov [RCX], BL ;rozmiar!!
 
@@ -156,6 +157,10 @@ jmp niexcztery
 movxmm:
 ;mnozenie razy 3
 vmovups xmm0, xmmword ptr[R9]
+
+pxor xmm1, xmm1
+
+vpmovzxbw ymm3, xmm1
 vpmovzxbw ymm2, xmm0
 
 vpaddw ymm0, ymm2, ymm2
@@ -163,8 +168,10 @@ vpaddw ymm2, ymm0, ymm2
 
 ;dzielenie przez 16
 vpsrlw ymm2, ymm2, 4
-vpermq ymm0, ymm2, 11011000b
-;porownanie
+
+;wracamy do byte
+vpackuswb ymm4, ymm2, ymm2
+vpermq ymm0, ymm4, 11011000b
 
 vmovups [RCX], xmm0
 jmp warunekponieprawagranica
@@ -175,6 +182,16 @@ mov R9, wskaznikrgb_cpy
 add R9, R8
 add R9, 24
 
+mov RCX, wskaznikrgb
+add RCX, R8
+
+
+mov R11, ostatniakolumna
+sub R11, R14 ;ostatnia kolumna - kolumna
+cmp R11, 48
+jge pierwszedodawaniexmm 
+
+movzx RBX, BYTE PTR[RCX]
 movzx RAX, BYTE PTR[R9]
 
 xor RDX, RDX
@@ -182,10 +199,6 @@ mov R11, 13
 mul R11
 mov R11, 16
 div R11
-
-mov RCX, wskaznikrgb
-add RCX, R8
-movzx RBX, BYTE PTR[RCX]
 
 add RBX, RAX
  
@@ -200,6 +213,31 @@ cmovl RBX, R11
 
 mov [RCX], BL ;rozmiar!!
 
+jmp koniecpetliikolumna
+
+pierwszedodawaniexmm:
+;mnozenie razy 13
+vmovups xmm0, xmmword ptr[R9]
+
+vpmovzxbw ymm2, xmm0
+
+vpsllw ymm0, ymm2, 3 ;x8 w ymm0
+vpsllw ymm3, ymm2, 2 ;x4 w ymm3
+vpaddw ymm0, ymm0, ymm3 ;x12 w ymm0
+
+vpaddw ymm2, ymm0, ymm2; x12 + x1 w ymm2
+
+;dzielenie przez 16
+vpsrlw ymm2, ymm2, 4
+
+;wracamy do byte
+vpackuswb ymm4, ymm2, ymm2
+vpermq ymm0, ymm4, 11011000b
+
+vmovups xmm1, xmmword ptr[RCX]
+vpaddw xmm0, xmm0, xmm1
+vmovups [RCX], xmm0
+add R14, 15
 jmp koniecpetliikolumna
 
 nielewagranicaxcztery:
@@ -225,6 +263,12 @@ add RCX, R8
 mov R9, wskaznikrgb_cpy
 add R9, R8
 sub R9, 96
+
+mov R11, ostatniakolumna
+sub R11, R14 ;ostatnia kolumna - kolumna
+cmp R11, 48
+jge drugiedodawaniexmm 
+
 movzx RBX, BYTE PTR[RCX]
 movzx RAX, BYTE PTR[R9]
 
@@ -245,11 +289,22 @@ cmovl RBX, R11
 
 mov [RCX], BL ;rozmiar!!
 
+powrotpodrugim:
 ;*wskaznik += *(wskaznik_cpy + przesunicie) * 0.7;
 mov R9, wskaznikrgb_cpy
 add R9, R8
 add R9, 24
 
+mov RCX, wskaznikrgb
+add RCX, R8
+
+
+mov R11, ostatniakolumna
+sub R11, R14 ;ostatnia kolumna - kolumna
+cmp R11, 48
+jge trzeciedodawaniexmm ;>=16
+
+movzx RBX, BYTE PTR[RCX]
 movzx RAX, BYTE PTR[R9] ;<-wyjatkogenne
 
 xor RDX, RDX
@@ -257,10 +312,6 @@ mov R11, 8
 div R11
 mov R11, 6
 mul R11
-
-mov RCX, wskaznikrgb
-add RCX, R8
-movzx RBX, BYTE PTR[RCX]
 
 add RBX, RAX
 
@@ -275,6 +326,46 @@ cmovl RBX, R11
 
 mov [RCX], BL ;rozmiar!!
 
+jmp koniecpetliikolumna
+
+drugiedodawaniexmm:
+;mnozenie razy 13
+vmovups xmm0, xmmword ptr[R9]
+vpmovzxbw ymm2, xmm0
+
+;dzielenie przez 16
+vpsrlw ymm2, ymm2, 4
+
+;wracamy do byte
+vpackuswb ymm4, ymm2, ymm2
+vpermq ymm0, ymm4, 11011000b
+
+vmovups xmm1, xmmword ptr[RCX]
+vpaddw xmm0, xmm0, xmm1
+vmovups [RCX], xmm0
+jmp powrotpodrugim
+
+trzeciedodawaniexmm:
+;mnozenie razy 6
+vmovups xmm0, xmmword ptr[R9]
+
+vpmovzxbw ymm2, xmm0
+
+vpsllw ymm0, ymm2, 1 ;x2 w ymm0
+vpsllw ymm3, ymm2, 2 ;x4 w ymm3
+vpaddw ymm2, ymm0, ymm3 ;x6 w ymm2
+
+;dzielenie przez 8
+vpsrlw ymm2, ymm2, 3
+
+;wracamy do byte
+vpackuswb ymm4, ymm2, ymm2
+vpermq ymm0, ymm4, 11011000b
+
+vmovups xmm1, xmmword ptr[RCX]
+vpaddw xmm0, xmm0, xmm1
+vmovups [RCX], xmm0
+add R14, 15
 jmp koniecpetliikolumna
 
 GenerujEcho endp
