@@ -107,8 +107,8 @@ cmp RCX, 0
 jl nieprawagranica
 jmp koniecpetliikolumna
 
-nieprawagranica:
-;*wskaznik = *(wskaznik_cpy - przesunicie) * 0.2;
+nieprawagranica: 
+;*wskaznik = *(wskaznik_cpy - przesunicie) * 3 / 16;
 mov R9, wskaznikrgb_cpy
 sub R9, 24
 add R9, R8
@@ -126,8 +126,7 @@ movzx RAX, BYTE PTR[R9]
 
 mov R11, 3
 mul R11
-mov R11, 16
-div R11
+shr RAX, 4
 
 mov RBX, RAX
 
@@ -177,7 +176,7 @@ vmovups [RCX], xmm0
 jmp warunekponieprawagranica
 
 niexcztery:
-;*wskaznik += *(wskaznik_cpy + przesunicie) * 0.8
+;*wskaznik += *(wskaznik_cpy + przesunicie) * 13 / 16
 mov R9, wskaznikrgb_cpy
 add R9, R8
 add R9, 24
@@ -197,8 +196,7 @@ movzx RAX, BYTE PTR[R9]
 xor RDX, RDX
 mov R11, 13
 mul R11
-mov R11, 16
-div R11
+shr RAX, 4
 
 add RBX, RAX
  
@@ -256,7 +254,7 @@ jl nieprawagranicaxcztery
 jmp niexcztery
 
 nieprawagranicaxcztery:
-;*wskaznik += *(wskaznik_cpy - przesunicie * 4) * 0.1;
+;*wskaznik += *(wskaznik_cpy - przesunicie * 4) / 16;
 mov RCX, wskaznikrgb
 add RCX, R8
 
@@ -273,8 +271,7 @@ movzx RBX, BYTE PTR[RCX]
 movzx RAX, BYTE PTR[R9]
 
 xor RDX, RDX
-mov R11, 16
-div R11
+shr RAX, 4
 
 add RBX, RAX
 
@@ -290,7 +287,7 @@ cmovl RBX, R11
 mov [RCX], BL ;rozmiar!!
 
 powrotpodrugim:
-;*wskaznik += *(wskaznik_cpy + przesunicie) * 0.7;
+;*wskaznik += *(wskaznik_cpy + przesunicie) * 6 / 8;
 mov R9, wskaznikrgb_cpy
 add R9, R8
 add R9, 24
@@ -302,14 +299,13 @@ add RCX, R8
 mov R11, ostatniakolumna
 sub R11, R14 ;ostatnia kolumna - kolumna
 cmp R11, 48
-jge trzeciedodawaniexmm ;>=16
+jge trzeciedodawaniexmm
 
 movzx RBX, BYTE PTR[RCX]
 movzx RAX, BYTE PTR[R9] ;<-wyjatkogenne
 
 xor RDX, RDX
-mov R11, 8
-div R11
+shr RAX, 3
 mov R11, 6
 mul R11
 

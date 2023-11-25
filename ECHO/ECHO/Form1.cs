@@ -114,17 +114,16 @@ namespace ECHO
                     if (wartoscirgb?.Length > 0)
                     {
                         GenerujEcho gen = (GenerujEcho)Marshal.GetDelegateForFunctionPointer(procAddress, typeof(GenerujEcho));
-                        byte[] przykladowa = { 1, 2, 3 };
                         long poczatek;
                         long koniec;
 
                         var kopia_wartoscirgb = wartoscirgb;
 
-/*                       ///
-                        for (int m = 1; m <= 64; m++)
+                        ///
+/*                        for (int m = 1; m <= 64; m++)
                         {
-                            watki.Value = m;
-                        ///*/
+                            watki.Value = m;*/
+                        ///
 
                             if (watki.Value > 1)//czemu?
                             {
@@ -151,20 +150,23 @@ namespace ECHO
                                 int ostatnia_kolumna = bmpData.Width * 3;
 
                                 poczatek = Stopwatch.GetTimestamp();
-                                for (int i = 0; i < watki.Value; i++)
-                                {
-                                    int j = i; //wyscig
-                                    //Thread tmp = new Thread(() => fun(wartoscirgb, dlugosci_przedzialow[j], poczatki_przedzialow[j], kopia_wartoscirgb, width, dlugosc, stride, gen));
-                                    Thread tmp = new Thread(() => gen(wartoscirgb, dlugosci_przedzialow[j], poczatki_przedzialow[j], kopia_wartoscirgb, ostatnia_kolumna, stride));
-                                    zadania[j] = tmp;
-                                    tmp.Start();
-                                }
 
-                                foreach (var task in zadania)
-                                {
-                                    task.Join();
-                                }
-                                koniec = Stopwatch.GetTimestamp();
+                                    for (int i = 0; i < watki.Value; i++)
+                                    {
+                                       int j = i; //wyscig
+                                                   //Thread tmp = new Thread(() => fun(wartoscirgb, dlugosci_przedzialow[j], poczatki_przedzialow[j], kopia_wartoscirgb, width, dlugosc, stride, gen));
+                                        Thread tmp = new Thread(() => gen(wartoscirgb, dlugosci_przedzialow[j], poczatki_przedzialow[j], kopia_wartoscirgb, ostatnia_kolumna, stride));
+                                        zadania[j] = tmp;
+                                        //tmp.Start();
+
+                                        //Thread.Sleep(1);
+                                    }
+
+                                    foreach (var task in zadania)
+                                    {
+                                        //task.Join();
+                                    }
+                                    koniec = Stopwatch.GetTimestamp();
 
                             }
                             else
@@ -177,14 +179,15 @@ namespace ECHO
                             System.Runtime.InteropServices.Marshal.Copy(wartoscirgb, 0, wskaznik, bytes);
 
                             obraz.Image = wczytany;
-                            czaswykonania.Text = (koniec - poczatek /*sw.ElapsedMilliseconds*/).ToString() + " tiknięć";
-/*                        ///
-                            using (StreamWriter writetext = File.AppendText("wyniki.txt"))
+                            //czaswykonania.Text = (koniec - poczatek /*sw.ElapsedMilliseconds*/).ToString() + " tiknięć";
+
+                        ///
+/*                            using (StreamWriter writetext = File.AppendText("wyniki.txt"))
                             {
                                 writetext.WriteLine((koniec - poczatek *//*sw.ElapsedMilliseconds*//*).ToString());
                             }
-                        };
-                        ///*/
+                        };*/
+                        ///
 
                     }
                     else {
@@ -204,11 +207,6 @@ namespace ECHO
             }
         }
 
-        private void fun(byte[] wartoscirgb, int dlugosci_przedzialow, int poczatki_przedzialow, byte[] kopia_wartoscirgb, int width, int dlugosc, int stride, GenerujEcho gen) {
-            lock (klucz) {
-                gen(wartoscirgb, dlugosci_przedzialow, poczatki_przedzialow, kopia_wartoscirgb, width, stride);
-            }
-        }
         private void watki_ValueChanged(object sender, EventArgs e)
         {
 
