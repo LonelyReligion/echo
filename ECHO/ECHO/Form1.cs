@@ -150,36 +150,38 @@ namespace ECHO
                                 int ostatnia_kolumna = bmpData.Width * 3;
 
                                 poczatek = Stopwatch.GetTimestamp();
-
+                                status.Text = "w trakcie";
                                     for (int i = 0; i < watki.Value; i++)
                                     {
                                        int j = i; //wyscig
                                                    //Thread tmp = new Thread(() => fun(wartoscirgb, dlugosci_przedzialow[j], poczatki_przedzialow[j], kopia_wartoscirgb, width, dlugosc, stride, gen));
                                         Thread tmp = new Thread(() => gen(wartoscirgb, dlugosci_przedzialow[j], poczatki_przedzialow[j], kopia_wartoscirgb, ostatnia_kolumna, stride));
                                         zadania[j] = tmp;
-                                        //tmp.Start();
+                                        tmp.Start();
 
                                         //Thread.Sleep(1);
                                     }
 
                                     foreach (var task in zadania)
                                     {
-                                        //task.Join();
+                                        task.Join();
                                     }
                                     koniec = Stopwatch.GetTimestamp();
-
+                                    status.Text = "zatrzymane";
                             }
                             else
                             {
                                 poczatek = Stopwatch.GetTimestamp();
+                                status.Text = "w trakcie";
                                 gen(wartoscirgb, wartoscirgb.Length, 0, kopia_wartoscirgb, bmpData.Width*3, bmpData.Stride);
                                 koniec = Stopwatch.GetTimestamp();
+                                status.Text = "zatrzymane";
                             }
 
                             System.Runtime.InteropServices.Marshal.Copy(wartoscirgb, 0, wskaznik, bytes);
-
+                            
                             obraz.Image = wczytany;
-                            //czaswykonania.Text = (koniec - poczatek /*sw.ElapsedMilliseconds*/).ToString() + " tiknięć";
+                            czaswykonania.Text = (koniec - poczatek /*sw.ElapsedMilliseconds*/).ToString() + " tiknięć";
 
                         ///
 /*                            using (StreamWriter writetext = File.AppendText("wyniki.txt"))
