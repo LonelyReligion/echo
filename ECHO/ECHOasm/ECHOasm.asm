@@ -173,14 +173,11 @@ jg nielewagranicaxcztery
 jmp niexcztery
 
 movxmm:
-;mnozenie razy 3
 vmovups xmm0, xmmword ptr[R9]
 
-pxor xmm1, xmm1
-
-vpmovzxbw ymm3, xmm1
 vpmovzxbw ymm2, xmm0
 
+;mnozenie razy 3
 vpaddw ymm0, ymm2, ymm2
 vpaddw ymm2, ymm0, ymm2
 
