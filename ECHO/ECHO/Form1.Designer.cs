@@ -42,6 +42,7 @@
             this.wybierz = new System.Windows.Forms.Button();
             this.opiswatkow = new System.Windows.Forms.Label();
             this.watki = new System.Windows.Forms.NumericUpDown();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.obraz)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.watki)).BeginInit();
             this.SuspendLayout();
@@ -69,7 +70,7 @@
             this.obraz.Location = new System.Drawing.Point(590, 79);
             this.obraz.Name = "obraz";
             this.obraz.Size = new System.Drawing.Size(512, 512);
-            this.obraz.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.obraz.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.obraz.TabIndex = 15;
             this.obraz.TabStop = false;
             // 
@@ -102,7 +103,7 @@
             this.opisstatus.AutoSize = true;
             this.opisstatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.opisstatus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(115)))), ((int)(((byte)(150)))));
-            this.opisstatus.Location = new System.Drawing.Point(20, 567);
+            this.opisstatus.Location = new System.Drawing.Point(12, 627);
             this.opisstatus.Name = "opisstatus";
             this.opisstatus.Size = new System.Drawing.Size(159, 24);
             this.opisstatus.TabIndex = 18;
@@ -113,7 +114,7 @@
             this.status.AutoSize = true;
             this.status.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.status.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(154)))), ((int)(((byte)(178)))));
-            this.status.Location = new System.Drawing.Point(185, 567);
+            this.status.Location = new System.Drawing.Point(177, 627);
             this.status.Name = "status";
             this.status.Size = new System.Drawing.Size(105, 24);
             this.status.TabIndex = 19;
@@ -215,12 +216,26 @@
             0});
             this.watki.ValueChanged += new System.EventHandler(this.watki_ValueChanged);
             // 
+            // button1
+            // 
+            this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F);
+            this.button1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(115)))), ((int)(((byte)(150)))));
+            this.button1.Location = new System.Drawing.Point(968, 612);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(134, 38);
+            this.button1.TabIndex = 29;
+            this.button1.Text = "Save as...";
+            this.button1.UseVisualStyleBackColor = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(207)))), ((int)(((byte)(227)))));
-            this.ClientSize = new System.Drawing.Size(1132, 632);
+            this.ClientSize = new System.Drawing.Size(1132, 670);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.watki);
             this.Controls.Add(this.opiswatkow);
             this.Controls.Add(this.wybierz);
@@ -258,6 +273,7 @@
         private System.Windows.Forms.Button wybierz;
         private System.Windows.Forms.Label opiswatkow;
         private System.Windows.Forms.NumericUpDown watki;
+        private System.Windows.Forms.Button button1;
     }
 }
 

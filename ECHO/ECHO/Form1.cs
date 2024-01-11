@@ -223,5 +223,18 @@ namespace ECHO
         {
 
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+            saveFileDialog1.Filter = "Obraz .bmp|*.bmp";
+            saveFileDialog1.Title = "Zapisz jako .bmp";
+            saveFileDialog1.ShowDialog();
+
+            if (saveFileDialog1.FileName != "") {
+                obraz.Image.Save(saveFileDialog1.FileName, ImageFormat.Bmp);
+            }
+    
+        }
     }
 }
