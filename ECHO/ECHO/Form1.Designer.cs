@@ -70,7 +70,7 @@
             this.obraz.Location = new System.Drawing.Point(590, 79);
             this.obraz.Name = "obraz";
             this.obraz.Size = new System.Drawing.Size(512, 512);
-            this.obraz.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.obraz.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.obraz.TabIndex = 15;
             this.obraz.TabStop = false;
             // 
@@ -225,7 +225,7 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(134, 38);
             this.button1.TabIndex = 29;
-            this.button1.Text = "Save as...";
+            this.button1.Text = "Zapisz jako...";
             this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 

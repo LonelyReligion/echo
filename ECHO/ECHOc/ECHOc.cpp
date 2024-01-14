@@ -10,7 +10,7 @@ int GenerujEcho(unsigned char* wartosci_rgb, int dlugosc_tablicy, int index, uns
 	const int przesunicie = 24;
 
 	unsigned char* wskaznik = wartosci_rgb + index;
-	unsigned char* wskaznik_cpy = index_wzgledny + wartosci_rgb_cpy;
+	unsigned char* wskaznik_cpy = index + wartosci_rgb_cpy;
 
 	while(wskaznik < dlugosc_tablicy + index + wartosci_rgb) { 
 		if (kolumna != ostatnia_kolumna) { 
@@ -18,12 +18,12 @@ int GenerujEcho(unsigned char* wartosci_rgb, int dlugosc_tablicy, int index, uns
 			kolumna++;
 			if ((wskaznik - przesunicie) > (wartosci_rgb + wiersz * stride) && (wskaznik + przesunicie) < (wartosci_rgb + wiersz * stride + ostatnia_kolumna)) { 
 				*wskaznik = *(wskaznik_cpy - przesunicie) * 3 / 16;
-				if ((wskaznik_cpy - przesunicie * 4) > (wartosci_rgb_cpy + wiersz * stride) && (wskaznik_cpy + przesunicie * 4) < (wartosci_rgb_cpy + wiersz * stride + ostatnia_kolumna)) {//<- tu jestem w asm
-					* wskaznik += *(wskaznik_cpy - przesunicie * 4) / 16;
-					*wskaznik += *(wskaznik_cpy + przesunicie) * 6 / 8; 
+				if ((wskaznik_cpy - przesunicie * 4) > (wartosci_rgb_cpy + wiersz * stride) && (wskaznik_cpy + przesunicie * 4) < (wartosci_rgb_cpy + wiersz * stride + ostatnia_kolumna)) {//te warunki to problem
+					*wskaznik += *(wskaznik_cpy - przesunicie * 4) / 16;
+					*wskaznik += *(wskaznik_cpy + przesunicie) * 6 / 8;
 				}
 				else
-					*wskaznik += *(wskaznik_cpy + przesunicie) * 13 / 16;
+					*wskaznik += *(wskaznik_cpy + przesunicie) * 13 / 16; //i to
 			}
 		}
 		else {

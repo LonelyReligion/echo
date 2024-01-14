@@ -47,7 +47,6 @@ jle koniec
 
 dodawanie:
 ;wskaznik < dlugosc_tablicy + index + wartosci_rgb
-xor RAX, RAX
 mov RAX, R8
 sub RAX, R15
 sub RAX, R12
@@ -161,13 +160,17 @@ cmovl RBX, R11
 mov [RCX], BL ;rozmiar!!
 
 warunekponieprawagranica:
-;(wskaznik_cpy - przesunicie * 4) > (wartosci_rgb_cpy + R13 * stride) przeklejone
-mov RCX, R8
-sub RCX, 96 
-xor RAX, RAX
-mov RAX, R13
-mul stride 
+;(wskaznik_cpy - przesunicie * 4) > (wartosci_rgb_cpy + wiersz * stride)
+mov RCX, wskaznikrgb_cpy
+add RCX, R8 ;index
+sub RCX, 96
+
+sub RCX, wskaznikrgb_cpy
+
+mov RAX, R8
+sub RAX, R14
 sub RCX, RAX
+
 cmp RCX, 0
 jg nielewagranicaxcztery
 jmp niexcztery
@@ -193,23 +196,21 @@ jmp warunekponieprawagranica
 
 niexcztery:
 ;*wskaznik += *(wskaznik_cpy + przesunicie) * 13 / 16
+mov RCX, wskaznikrgb
+add RCX, R8
+
 mov R9, wskaznikrgb_cpy
 add R9, R8
 add R9, 24
 
-mov RCX, wskaznikrgb
-add RCX, R8
-
-
 mov R11, ostatniakolumna
 sub R11, R14 ;ostatnia kolumna - kolumna
-cmp R11, 48
+cmp R11, 72
 jge pierwszedodawaniexmm 
 
 movzx RBX, BYTE PTR[RCX]
 movzx RAX, BYTE PTR[R9]
 
-xor RDX, RDX
 mov R11, 13
 mul R11
 shr RAX, 4
@@ -232,7 +233,6 @@ jmp koniecpetliikolumna
 pierwszedodawaniexmm:
 ;mnozenie razy 13
 vmovups xmm0, xmmword ptr[R9]
-
 vpmovzxbw ymm2, xmm0
 
 vpsllw ymm0, ymm2, 3 ;x8 w ymm0
@@ -257,8 +257,9 @@ jmp koniecpetliikolumna
 nielewagranicaxcztery:
 ; (wskaznik_cpy + przesunicie * 4) < (wartosci_rgb_cpy + R13 * stride + ostatnia_kolumna)
 mov RCX, wskaznikrgb_cpy
-add RCX, R8
+add RCX, R8 ;index
 add RCX, 96
+
 sub RCX, wskaznikrgb_cpy
 xor RAX, RAX
 mov RAX, R13
@@ -280,7 +281,7 @@ sub R9, 96
 
 mov R11, ostatniakolumna
 sub R11, R14 ;ostatnia kolumna - kolumna
-cmp R11, 48
+cmp R11, 72
 jge drugiedodawaniexmm 
 
 movzx RBX, BYTE PTR[RCX]
@@ -311,19 +312,18 @@ add R9, 24
 mov RCX, wskaznikrgb
 add RCX, R8
 
-
 mov R11, ostatniakolumna
 sub R11, R14 ;ostatnia kolumna - kolumna
-cmp R11, 48
+cmp R11, 72
 jge trzeciedodawaniexmm
 
 movzx RBX, BYTE PTR[RCX]
 movzx RAX, BYTE PTR[R9] ;<-wyjatkogenne
 
 xor RDX, RDX
-shr RAX, 3
 mov R11, 6
 mul R11
+shr RAX, 3
 
 add RBX, RAX
 
@@ -341,7 +341,6 @@ mov [RCX], BL ;rozmiar!!
 jmp koniecpetliikolumna
 
 drugiedodawaniexmm:
-;mnozenie razy 13
 vmovups xmm0, xmmword ptr[R9]
 vpmovzxbw ymm2, xmm0
 
