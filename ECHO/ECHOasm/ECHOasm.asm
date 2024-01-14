@@ -205,7 +205,7 @@ add R9, 24
 
 mov R11, ostatniakolumna
 sub R11, R14 ;ostatnia kolumna - kolumna
-cmp R11, 72
+cmp R11, 288
 jge pierwszedodawaniexmm 
 
 movzx RBX, BYTE PTR[RCX]
