@@ -209,8 +209,11 @@ jge pierwszedodawaniexmm
 movzx RBX, BYTE PTR[RCX]
 movzx RAX, BYTE PTR[R9]
 
-mov R11, 13
-mul R11
+mov R11, RAX
+shl R11, 2
+add RAX, R11
+shl R11, 1
+add RAX, R11
 shr RAX, 4
 
 add RBX, RAX

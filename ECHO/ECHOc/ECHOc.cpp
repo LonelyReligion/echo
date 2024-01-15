@@ -23,7 +23,7 @@ int GenerujEcho(unsigned char* wartosci_rgb, int dlugosc_tablicy, int index, uns
 					*wskaznik += *(wskaznik_cpy + przesunicie) * 6 / 8;
 				}
 				else {
-					*wskaznik += *(wskaznik_cpy + przesunicie) * 13 / 16; //i to
+					*wskaznik += ((*(wskaznik_cpy + przesunicie) << 3) + (*(wskaznik_cpy + przesunicie) << 2) + (*(wskaznik_cpy + przesunicie))) >> 4; //i to
 				}
 			}
 		}
