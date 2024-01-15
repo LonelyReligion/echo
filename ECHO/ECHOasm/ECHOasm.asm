@@ -109,19 +109,17 @@ mov R8, RAX
 jmp dodawanie
 
 nielewagranica:
-;(wskaznik + przesunicie) < (wartosci_rgb + R13 * stride + ostatnia_kolumna)
-mov RCX, R8
+; (wskaznik_cpy + przesunicie) < (wartosci_rgb_cpy + R13 * stride + ostatnia_kolumna)
+mov RCX, wskaznikrgb_cpy
+add RCX, R8 ;index
 add RCX, 24
 
-xor RAX, RAX
-mov RAX, R13
-
+sub RCX, wskaznikrgb_cpy
+mov RAX, R13 ;r13 to wiersz
 mul stride 
-
 sub RCX, RAX
 sub RCX, ostatniakolumna
 cmp RCX, 0
-
 jl nieprawagranica
 jmp koniecpetliikolumna
 
@@ -172,7 +170,7 @@ sub RAX, R14
 sub RCX, RAX
 
 cmp RCX, 0
-jg nielewagranicaxcztery
+jg nieprawagranicaxcztery
 jmp niexcztery
 
 movxmm:
@@ -201,11 +199,11 @@ add RCX, R8
 
 mov R9, wskaznikrgb_cpy
 add R9, R8
-add R9, 24
+add R9, 24 ;24
 
 mov R11, ostatniakolumna
 sub R11, R14 ;ostatnia kolumna - kolumna
-cmp R11, 288
+cmp R11, 120 ;(24+16)*3
 jge pierwszedodawaniexmm 
 
 movzx RBX, BYTE PTR[RCX]
@@ -253,22 +251,6 @@ vpaddw xmm0, xmm0, xmm1
 vmovups [RCX], xmm0
 add R14, 15
 jmp koniecpetliikolumna
-
-nielewagranicaxcztery:
-; (wskaznik_cpy + przesunicie * 4) < (wartosci_rgb_cpy + R13 * stride + ostatnia_kolumna)
-mov RCX, wskaznikrgb_cpy
-add RCX, R8 ;index
-add RCX, 96
-
-sub RCX, wskaznikrgb_cpy
-xor RAX, RAX
-mov RAX, R13
-mul stride 
-sub RCX, RAX
-sub RCX, ostatniakolumna
-cmp RCX, 0
-jl nieprawagranicaxcztery
-jmp niexcztery
 
 nieprawagranicaxcztery:
 ;*wskaznik += *(wskaznik_cpy - przesunicie * 4) / 16;

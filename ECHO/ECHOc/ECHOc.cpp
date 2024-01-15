@@ -16,14 +16,15 @@ int GenerujEcho(unsigned char* wartosci_rgb, int dlugosc_tablicy, int index, uns
 		if (kolumna != ostatnia_kolumna) { 
 			//zeby krawedzie sie nie zmienialy
 			kolumna++;
-			if ((wskaznik - przesunicie) > (wartosci_rgb + wiersz * stride) && (wskaznik + przesunicie) < (wartosci_rgb + wiersz * stride + ostatnia_kolumna)) { 
+			if ((wskaznik - przesunicie) > (wartosci_rgb + wiersz * stride) && (wskaznik_cpy + przesunicie) < (wartosci_rgb_cpy + wiersz * stride + ostatnia_kolumna)) {
 				*wskaznik = *(wskaznik_cpy - przesunicie) * 3 / 16;
-				if ((wskaznik_cpy - przesunicie * 4) > (wartosci_rgb_cpy + wiersz * stride) && (wskaznik_cpy + przesunicie * 4) < (wartosci_rgb_cpy + wiersz * stride + ostatnia_kolumna)) {//te warunki to problem
+				if ((wskaznik_cpy - przesunicie * 4) > (wartosci_rgb_cpy + wiersz * stride)) {//te warunki to problem
 					*wskaznik += *(wskaznik_cpy - przesunicie * 4) / 16;
 					*wskaznik += *(wskaznik_cpy + przesunicie) * 6 / 8;
 				}
-				else
+				else {
 					*wskaznik += *(wskaznik_cpy + przesunicie) * 13 / 16; //i to
+				}
 			}
 		}
 		else {
