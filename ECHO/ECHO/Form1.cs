@@ -119,11 +119,11 @@ namespace ECHO
 
                         var kopia_wartoscirgb = wartoscirgb;
 
-                        ///
-                        //for (int m = 1; m <= 64; m++)
-                        //{
-                           // watki.Value = m;
-                        ///
+                        /*
+                        for (int m = 1; m <= 64; m++)
+                        {
+                            watki.Value = m;
+                        */
 
                             if (watki.Value > 1)//czemu?
                             {
@@ -181,15 +181,17 @@ namespace ECHO
                             System.Runtime.InteropServices.Marshal.Copy(wartoscirgb, 0, wskaznik, bytes);
                             
                             obraz.Image = wczytany;
+
                             czaswykonania.Text = (koniec - poczatek /*sw.ElapsedMilliseconds*/).ToString() + " tiknięć";
 
-                        /// 
-                            // using (StreamWriter writetext = File.AppendText("wyniki.txt"))
-                            //{
-                            //    writetext.WriteLine((koniec - poczatek /*sw.ElapsedMilliseconds*/).ToString());
-                            //}
-                       // }; 
-                        ///
+                        /* 
+                            using (StreamWriter writetext = File.AppendText("wyniki.txt"))
+                            {
+                                writetext.WriteLine((koniec - poczatek sw.ElapsedMilliseconds).ToString());
+                            }
+                        }; */ 
+                        
+                        
 
                     }
                     else {

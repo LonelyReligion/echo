@@ -1,3 +1,19 @@
+;/////////////////////////////////////////////////
+;/// Temat projektu: Echo w obrazie
+;/// Opis: 
+;///
+;///
+;///
+;/// Autor: Agnieszka Ta¿birek
+;/// Informatyka SSI Semestr 5. Grupa 2.
+;/// Data ukoñczenia: 15.01.2024
+;/// Rok akademicki: 2023/2024
+;/// 1.0.0 11.10.23 Utworzenie projektu, GUI, ³adowanie obrazu do okna
+;/// 1.1.0 18.10.23 Pod³¹czenie pustych bibliotek
+;/// 1.2.0 20.10.23 Wywo³ywanie bibliotek wielow¹tkowo
+;///
+;////////////////////////////////////////////////
+
 ;rcx adres pierwszego elementu
 ;rdx -> r12 liczba elementow
 ;r8 index
