@@ -119,6 +119,7 @@
             this.status.Size = new System.Drawing.Size(105, 24);
             this.status.TabIndex = 19;
             this.status.Text = "zatrzymane";
+            this.status.Click += new System.EventHandler(this.status_Click);
             // 
             // tytul
             // 

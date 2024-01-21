@@ -27,7 +27,6 @@ namespace ECHO
     {
         // ZMIENIĆ NA TYPY POBIERANE I ZWRACANE
         delegate int GenerujEcho(byte[] tablica, int dlugosc_tablicy, int index, byte[] tablica_kopia, int width, int stride);
-        private static readonly object klucz = new Object();
 
 
         [DllImport("kernel32.dll")]
@@ -95,6 +94,7 @@ namespace ECHO
 
         private void start_Click_1(object sender, EventArgs e)
         {
+            
             string wybordll;
             if (asmdll.Checked)
             {
@@ -118,14 +118,15 @@ namespace ECHO
                         long koniec;
 
                         var kopia_wartoscirgb = wartoscirgb;
-
+                        this.status.Text = "w trakcie";
+                        this.status.Refresh();
                         /*
                         for (int m = 1; m <= 64; m++)
                         {
                             watki.Value = m;
                         */
 
-                            if (watki.Value > 1)//czemu?
+                        if (watki.Value > 1)//czemu?
                             {
 
 
@@ -150,7 +151,7 @@ namespace ECHO
                                 int ostatnia_kolumna = bmpData.Width * 3;
 
                                 poczatek = Stopwatch.GetTimestamp();
-                                status.Text = "w trakcie";
+                                
                                     for (int i = 0; i < watki.Value; i++)
                                     {
                                        int j = i; //wyscig
@@ -167,15 +168,15 @@ namespace ECHO
                                         task.Join();
                                     }
                                     koniec = Stopwatch.GetTimestamp();
-                                    status.Text = "zatrzymane";
+                                    
                             }
                             else
                             {
                                 poczatek = Stopwatch.GetTimestamp();
-                                status.Text = "w trakcie";
+                                
                                 gen(wartoscirgb, wartoscirgb.Length, 0, kopia_wartoscirgb, bmpData.Width*3, bmpData.Stride);
                                 koniec = Stopwatch.GetTimestamp();
-                                status.Text = "zatrzymane";
+                                
                             }
 
                             System.Runtime.InteropServices.Marshal.Copy(wartoscirgb, 0, wskaznik, bytes);
@@ -189,10 +190,11 @@ namespace ECHO
                             {
                                 writetext.WriteLine((koniec - poczatek sw.ElapsedMilliseconds).ToString());
                             }
-                        }; */ 
-                        
-                        
+                        }; */
 
+
+                        status.Text = "zatrzymane";
+                        this.status.Refresh();
                     }
                     else {
                         MessageBox.Show("Aby skorzystać z tej funkcji musisz wgrać bitmapę.");
@@ -228,15 +230,23 @@ namespace ECHO
 
         private void button1_Click(object sender, EventArgs e)
         {
-            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
-            saveFileDialog1.Filter = "Obraz .bmp|*.bmp";
-            saveFileDialog1.Title = "Zapisz jako .bmp";
-            saveFileDialog1.ShowDialog();
+            if (obraz != null && obraz.Image != null)
+            {
+                SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+                saveFileDialog1.Filter = "Obraz .bmp|*.bmp";
+                saveFileDialog1.Title = "Zapisz jako .bmp";
+                saveFileDialog1.ShowDialog();
 
-            if (saveFileDialog1.FileName != "") {
-                obraz.Image.Save(saveFileDialog1.FileName, ImageFormat.Bmp);
+                if (saveFileDialog1.FileName != "")
+                {
+                    obraz.Image.Save(saveFileDialog1.FileName, ImageFormat.Bmp);
+                }
             }
-    
+        }
+
+        private void status_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
